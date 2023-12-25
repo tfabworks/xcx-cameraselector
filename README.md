@@ -1,0 +1,2 @@
+# xcx-cameraselector
+Scratch3から使用するカメラデバイスを切り替えられるようにする拡張です。
