@@ -9,7 +9,7 @@ SCRATCH_VM=${SCRATCH_VM:-"$REPO_ROOT/scratch-vm"}
 if [[ ! -d $SCRATCH_GUI ]] || [[ ! -d $SCRATCH_VM ]]; then
   [[ ! -d $SCRATCH_GUI ]] && echo "SCRATCH_GUI is not directory: $SCRATCH_GUI" >&2
   [[ ! -d $SCRATCH_VM ]] && echo "SCRATCH_VM is not directory: $SCRATCH_VM" >&2
-  echo "Please run 'npm run setup-scratch'" >&2
+  echo "Please first run 'npm run setup-scratch'" >&2
   exit 1
 fi
 
