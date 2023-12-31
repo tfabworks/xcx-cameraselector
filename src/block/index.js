@@ -77,12 +77,13 @@ class Scratch3CameraSelectorBlocks {
     // 対応するデバイスが見つからない場合に OverconstrainedError が発生する事がありますが、その対応が実装できていない事に注意が必要です。
     // 例えば MacbookPro は背面カメラをサポートしていないので {facingMode:{exact:"environment"}} を指定するとエラーが発生し現状では他のカメラに切り替えても復帰できなくなります。
     if(deviceId == "USER") {
-      this._getSelectableVideoProvider().mirror = true;
       this._getSelectableVideoProvider().setVideoDescriptor({facingMode:"user"});
+      this.runtime.ioDevices.video.mirror = true
     } else if(deviceId == "ENVIRONMENT") {
-      this._getSelectableVideoProvider().mirror = false;
       this._getSelectableVideoProvider().setVideoDescriptor({facingMode:{exact:"environment"}})
+      this.runtime.ioDevices.video.mirror = false
     } else {
+      this._getSelectableVideoProvider().mirror = this.runtime.ioDevices.video.mirror
       this._getSelectableVideoProvider().setVideoDescriptor({deviceId})
     }
   }
