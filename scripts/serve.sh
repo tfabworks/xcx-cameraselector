@@ -9,6 +9,11 @@ SCRATCH_GUI=${SCRATCH_GUI:-"$REPO_ROOT/scratch-gui"}
 "$REPO_ROOT/scripts/setup-scratch.sh"
 "$REPO_ROOT/scripts/register.sh"
 
+# npm install
+if [[ ! -d "$REPO_ROOT/node_modules" ]]; then
+  ( cd "$REPO_ROOT" && npm install )
+fi
+
 cd "$SCRATCH_GUI"
 # `npm run start` would also work, but modify config
 if [[ -n $DEV_SERVER_OPTS ]]; then
