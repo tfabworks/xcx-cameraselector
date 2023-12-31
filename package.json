@@ -9,7 +9,7 @@
     "build": "./scripts/build.sh",
     "start": "./scripts/serve.sh",
     "setup-scratch": "./scripts/setup-scratch.sh",
-    "clean": "mkdir -p .tmp.$$ && mv dist node_modules scratch-gui scratch-vm extension-support util .tmp.*/ 2>/dev/null && rm -rf .tmp.* &"
+    "clean": "mkdir -p .tmp.$$ && mv dist node_modules scratch-gui scratch-vm extension-support util .tmp.*/ 2>/dev/null; rm -rf .tmp.*/ &"
   },
   "devDependencies": {
     "format-message": "^6.2.4",
