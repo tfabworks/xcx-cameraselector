@@ -74,12 +74,14 @@ class Scratch3CameraSelectorBlocks {
 
   selectCamera(args) {
     const deviceId = args.LIST || '';
+    // 対応するデバイスが見つからない場合に OverconstrainedError が発生する事がありますが、その対応が実装できていない事に注意が必要です。
+    // 例えば MacbookPro は背面カメラをサポートしていないので {facingMode:{exact:"environment"}} を指定するとエラーが発生し現状では他のカメラに切り替えても復帰できなくなります。
     if(deviceId == "USER") {
-      this._getSelectableVideoProvider().setVideoDescriptor({facingMode:"user"});
       this._getSelectableVideoProvider().mirror = true;
+      this._getSelectableVideoProvider().setVideoDescriptor({facingMode:"user"});
     } else if(deviceId == "ENVIRONMENT") {
-      this._getSelectableVideoProvider().setVideoDescriptor({facingMode:{exact:"environment"}})
       this._getSelectableVideoProvider().mirror = false;
+      this._getSelectableVideoProvider().setVideoDescriptor({facingMode:{exact:"environment"}})
     } else {
       this._getSelectableVideoProvider().setVideoDescriptor({deviceId})
     }
@@ -87,10 +89,15 @@ class Scratch3CameraSelectorBlocks {
 
   getVideoDevicesMenu() {
     const defaultValues = [
-      { text: "default", value: "" },
-      { text: "前面カメラ", value: "USER" },
-      { text: "背面カメラ", value: "ENVIRONMENT" }
+      { text: "default", value: "" }
     ]
+    // Constraints に対応するデバイスが見つからなかった場合に OverconstrainedError が発生する際の問題が未解決なので封印
+    // if(navigator.mediaDevices.getSupportedConstraints().facingMode) {
+    //   defaultValues.push(
+    //     { text: "前面カメラ", value: "USER" },
+    //     { text: "背面カメラ", value: "ENVIRONMENT" }
+    //   )
+    // }
     const deviceValues = this._getSelectableVideoProvider().videoDevices.map(dev => ({
       text: dev.label,
       value: dev.deviceId
