@@ -3,8 +3,6 @@ This is an extension that allows switching camera devices in Scratch.
 
 ## Usage
 
-## Usage
-
 Follow these basic steps to use this project:
 
 ```bash
