@@ -13,6 +13,11 @@ if [[ ! -d $SCRATCH_GUI ]] || [[ ! -d $SCRATCH_VM ]]; then
   exit 1
 fi
 
+# npm install
+if [[ ! -d "$REPO_ROOT/node_modules" ]]; then
+  ( cd "$REPO_ROOT" && npm install )
+fi
+
 # build options
 ENTRY="$REPO_ROOT/src/entry"
 BLOCK="$REPO_ROOT/src/block"
