@@ -1,19 +1,25 @@
 # xcx-cameraselector
-Scratch3から使用するカメラデバイスを切り替えられるようにする拡張です。
+This is an extension that allows switching camera devices in Scratch.
 
 ## Usage
 
-```
-# 下準備 (install scratch-gui and scratch-vm)
-./scripts/setup-scratch.sh
+## Usage
 
-# register to local scratch
-npm run register
+Follow these basic steps to use this project:
 
-# Start local dev server ( http://127.0.0.1:8601 )
-./scripts/dev-server.sh
+```bash
+# Setup for Scratch
+# This command sets up the Scratch-related repositories
+# and installs necessary dependencies.
+npm run setup-scratch
 
-# Build mjs
-./scripts/build.sh
+# Build Process
+# This command executes the build of the project.
+# It generates files for production use.
+npm run build
 
+# Starting the Application
+# This command launches the development server and
+# makes the project viewable in a browser.
+npm run start
 ```
