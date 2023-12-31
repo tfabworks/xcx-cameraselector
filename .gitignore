@@ -1,0 +1,9 @@
+/dist
+/scratch-gui
+/scratch-vm
+/extension-support
+/util
+/tmp
+/.tmp.*
+/.envrc
+/src/entry/icon-convert/

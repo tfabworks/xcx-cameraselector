@@ -1,0 +1,14 @@
+{
+  "en": {
+    "name": "CameraSelector",
+    "description": "Make the camera selectable. This is an extension to help with extensions that use all cameras."
+  },
+  "ja": {
+    "name": "カメラセレクター",
+    "description": "使用するカメラを切り替えられるようにします。"
+  },
+  "ja-Hira": {
+    "name": "かめらせれくたー",
+    "description": "つかうかめらをえらべるようにします。"
+  }
+}
