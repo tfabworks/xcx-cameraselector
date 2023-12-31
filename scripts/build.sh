@@ -27,3 +27,6 @@ npx --yes xcratch-build \
   --entry="$ENTRY" \
   --block="$BLOCK" \
   --output="$OUTPUT"
+
+echo "data:text/javascript;base64,$(base64 < "$OUTPUT/$EXTENSION_ID.mjs" | perl -pe's/\s//g')" > "$OUTPUT/$EXTENSION_ID.mjs.dataurl.txt"
+
