@@ -8,7 +8,7 @@ import translationsJson from './translations.json';
 const _entry = {
     "name": "CameraSelector",
     "extensionId": "cameraselector",
-    "_extensionURL": "https://tfabworks.github.io/xcx-cameraselector/cameraselector.mjs",
+    "extensionURL": "https://tfabworks.github.io/xcx-cameraselector/dist/cameraselector.mjs",
     "collaborator": "TFabWorks",
     "description": "Make the camera selectable. This is an extension to help with extensions that use all cameras.",
     "helpLink": "https://github.com/tfabworks/xcx-cameraselector",
