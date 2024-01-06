@@ -16,7 +16,7 @@ const formatMessage = require('format-message');
  * When it was loaded as a module, 'extensionURL' will be replaced a URL which is retrieved from.
  * @type {string}
  */
-let extensionURL = 'https://tfabworks.github.io/cameraselector/dist/cameraselector.mjs';
+let extensionURL = 'https://tfabworks.github.io/xcx-cameraselector/dist/cameraselector.mjs';
 
 const HAT_TIMEOUT = 100;
 
