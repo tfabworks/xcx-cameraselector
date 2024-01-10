@@ -9,7 +9,7 @@ const log = minilog('gui');
  * Video Manager for video extensions.
  */
 class VideoProvider {
-    constructor () {
+    constructor() {
         /**
          * Default value for mirrored frames.
          * @type boolean
@@ -51,16 +51,16 @@ class VideoProvider {
          * @type {Array<MediaDeviceInfo>}
          */
         this._videoDevices = [];
-        navigator.permissions.query({name: "camera"}).then(p=>p.addEventListener('change', ()=>this._updateVideoDevices()))
+        navigator.permissions.query({ name: "camera" }).then(p => p.addEventListener('change', () => this._updateVideoDevices()))
         navigator.mediaDevices.addEventListener("devicechange", () => this._updateVideoDevices())
         this._updateVideoDevices()
     }
 
-    static get FORMAT_IMAGE_DATA () {
+    static get FORMAT_IMAGE_DATA() {
         return 'image-data';
     }
 
-    static get FORMAT_CANVAS () {
+    static get FORMAT_CANVAS() {
         return 'canvas';
     }
 
@@ -69,7 +69,7 @@ class VideoProvider {
      * sample canvas.
      * @type {Array.<number>}
      */
-    static get DIMENSIONS () {
+    static get DIMENSIONS() {
         return [480, 360];
     }
 
@@ -77,14 +77,14 @@ class VideoProvider {
      * Order preview drawable is inserted at in the renderer.
      * @type {number}
      */
-    static get ORDER () {
+    static get ORDER() {
         return 1;
     }
 
     /**
      * Get the HTML video element containing the stream
      */
-    get video () {
+    get video() {
         return this._video;
     }
 
@@ -102,7 +102,7 @@ class VideoProvider {
      *
      * @return {Promise.<Video>} resolves a promise to this video provider when video is ready.
      */
-    enableVideo () {
+    enableVideo() {
         this.enabled = true;
         return this._setupVideo();
     }
@@ -112,7 +112,7 @@ class VideoProvider {
      *
      * @return {Promise.<Video>} resolves a promise to this video provider when video is disabled.
      */
-    disableVideo () {
+    disableVideo() {
         this.enabled = false;
         // If we have begun a setup process, call _teardown after it completes
         if (this._singleSetup) {
@@ -127,7 +127,7 @@ class VideoProvider {
      * async part of disableVideo
      * @private
      */
-    _teardown () {
+    _teardown() {
         // we might be asked to re-enable before _teardown is called, just ignore it.
         if (this.enabled === false) {
             const disableTrack = requestDisableVideo();
@@ -153,7 +153,7 @@ class VideoProvider {
      *
      * @return {ArrayBuffer|Canvas|string|null} Frame data in requested format, null when errors.
      */
-    getFrame ({
+    getFrame({
         dimensions = VideoProvider.DIMENSIONS,
         mirror = this.mirror,
         format = VideoProvider.FORMAT_IMAGE_DATA,
@@ -163,9 +163,9 @@ class VideoProvider {
             return null;
         }
         const [width, height] = dimensions;
-        const workspace = this._getWorkspace({dimensions, mirror: Boolean(mirror)});
-        const {videoWidth, videoHeight} = this._video;
-        const {canvas, context, lastUpdate, cacheData} = workspace;
+        const workspace = this._getWorkspace({ dimensions, mirror: Boolean(mirror) });
+        const { videoWidth, videoHeight } = this._video;
+        const { canvas, context, lastUpdate, cacheData } = workspace;
         const now = Date.now();
 
         // if the canvas hasn't been updated...
@@ -190,7 +190,7 @@ class VideoProvider {
 
         // each data type has it's own data cache, but the canvas is the same
         if (!cacheData[format]) {
-            cacheData[format] = {lastUpdate: 0};
+            cacheData[format] = { lastUpdate: 0 };
         }
         const formatCache = cacheData[format];
 
@@ -221,7 +221,7 @@ class VideoProvider {
      * @abstract
      * @param {Error} error An error object from getUserMedia or other source of error.
      */
-    onError (error) {
+    onError(error) {
         log.error('Unhandled video io device error', error);
     }
 
@@ -230,7 +230,7 @@ class VideoProvider {
      * @private
      * @return {Promise} When video has been received, rejected if video is not received
      */
-    _setupVideo () {
+    _setupVideo() {
         // We cache the result of this setup so that we can only ever have a single
         // video/getUserMedia request happen at a time.
         if (this._singleSetup) {
@@ -267,7 +267,7 @@ class VideoProvider {
         return this._singleSetup;
     }
 
-    get videoReady () {
+    get videoReady() {
         if (!this.enabled) {
             return false;
         }
@@ -277,7 +277,7 @@ class VideoProvider {
         if (!this._track) {
             return false;
         }
-        const {videoWidth, videoHeight} = this._video;
+        const { videoWidth, videoHeight } = this._video;
         if (typeof videoWidth !== 'number' || typeof videoHeight !== 'number') {
             return false;
         }
@@ -294,7 +294,7 @@ class VideoProvider {
      * @private
      * @return {object} A workspace for canvas/data storage.  Internal format not documented intentionally
      */
-    _getWorkspace ({dimensions, mirror}) {
+    _getWorkspace({ dimensions, mirror }) {
         let workspace = this._workspace.find(space => (
             space.dimensions.join('-') === dimensions.join('-') &&
             space.mirror === mirror
@@ -323,17 +323,47 @@ class VideoProvider {
      *                           or rejects with an error if the update fails.
      */
     setVideoDescriptor(videoDescriptor) {
-        if(JSON.stringify(videoDescriptor) === JSON.stringify(this._videoDescriptor)) {
+        if (JSON.stringify(videoDescriptor) === JSON.stringify(this._videoDescriptor)) {
             return Promise.resolve()
         }
+        const oldVideoDescriptor = this._videoDescriptor
         this._videoDescriptor = videoDescriptor;
+        const dev = this._findDesiredVideoDevice()
+        if(dev != null) {
+            this._videoDescriptor = { deviceId: dev.deviceId }
+            if (JSON.stringify(oldVideoDescriptor) === JSON.stringify(this._videoDescriptor)) {
+                return Promise.resolve()
+            }
+        }
         const currentVideoReady = this.videoReady
         return this.disableVideo().then(() => {
             this._singleSetup = null;
-            if(currentVideoReady) {
+            if (currentVideoReady) {
                 return this.enableVideo()
             }
         })
+    }
+
+    /**
+     *
+     */
+    _findDesiredVideoDevice() {
+        const videoDescriptor = this._videoDescriptor
+        if (typeof videoDescriptor.deviceId !== "undefined" && videoDescriptor.deviceId !== "") {
+            return this._videoDevices.find(dev => dev.deviceId === videoDescriptor.deviceId)
+        }
+        // label指定の場合は完全一致と先頭一致と部分一致をチェックする
+        if (typeof videoDescriptor.label !== "undefined" && videoDescriptor.label !== "") {
+            const dev =
+                this._videoDevices.find(dev => dev.label === videoDescriptor.label) ||
+                this._videoDevices.find(dev => dev.label.startsWith(videoDescriptor.label)) ||
+                this._videoDevices.find(dev => dev.label.includes(videoDescriptor.label)) ||
+                this._videoDevices.find(dev => dev.label.toLocaleLowerCase().includes(videoDescriptor.label.toLocaleLowerCase()))
+            if (dev != null) {
+                return dev
+            }
+        }
+        return null
     }
 
     /**
@@ -348,7 +378,15 @@ class VideoProvider {
                 this._videoDevices = devices
                     .filter(d => d.deviceId && d.kind === 'videoinput')
                     .sort((a, b) => b.label < a.label);
-            });
+            })
+            .then(devices => {
+                // 希望デバイスの指定がある場合はカメラを切り替える
+                const dev = this._findDesiredVideoDevice()
+                if(dev != null) {
+                    this.setVideoDescriptor(dev)
+                }
+                return devices
+            })
     }
 
 }
@@ -361,7 +399,7 @@ class VideoProvider {
  * @returns {SelectableVideoProvider} The new or existing video provider.
  */
 export const setupSelectableVideoProvider = (runtime) => {
-    if(isSelectableVideoProvider(runtime.ioDevices.video.provider)) {
+    if (isSelectableVideoProvider(runtime.ioDevices.video.provider)) {
         return runtime.ioDevices.video.provider
     }
     const newProvider = new SelectableVideoProvider()
@@ -369,13 +407,13 @@ export const setupSelectableVideoProvider = (runtime) => {
     const oldVideoReady = oldProvider != null && oldProvider.videoReady
     if (oldProvider != null) {
         newProvider.mirror = oldProvider.mirror
-        if(oldProvider.videoReady) {
+        if (oldProvider.videoReady) {
             oldProvider.disableVideo()
         }
     }
     // New VideoProvider from here
     runtime.ioDevices.video.setProvider(newProvider)
-    if(oldVideoReady) {
+    if (oldVideoReady) {
         runtime.ioDevices.video.enableVideo()
     }
     return newProvider

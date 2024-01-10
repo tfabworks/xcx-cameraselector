@@ -1,22 +1,32 @@
 {
   "en": {
     "cameraselector.name": "Camera Selector",
-    "cameraselector.selectCamera": "Set camera to [LIST]"
+    "cameraselector.deviceName": "Device name",
+    "cameraselector.selectCamera": "Set camera to [LIST]",
+    "cameraselector.selectCameraWithLabel": "Set camera to [LABEL]"
   },
   "ja": {
     "cameraselector.name": "カメラセレクター",
-    "cameraselector.selectCamera": "カメラを[LIST]に切り替える"
+    "cameraselector.deviceName": "デバイス名",
+    "cameraselector.selectCamera": "カメラを[LIST]に切り替える",
+    "cameraselector.selectCameraWithLabel": "カメラを[LABEL]に切り替える"
   },
   "ja-Hira": {
     "cameraselector.name": "かめらせれくたー",
-    "cameraselector.selectCamera": "かめらを[LIST]にきりかえる"
+    "cameraselector.deviceName": "でばいすめい",
+    "cameraselector.selectCamera": "かめらを[LIST]にきりかえる",
+    "cameraselector.selectCameraWithLabel": "かめらを[LABEL]にきりかえる"
   },
   "zh-cn": {
     "cameraselector.name": "相机选择器",
-    "cameraselector.selectCamera": "切换相机至[LIST]"
+    "cameraselector.deviceName": "设备名称",
+    "cameraselector.selectCamera": "切换相机至[LIST]",
+    "cameraselector.selectCameraWithLabel": "切换相机至[LABEL]"
   },
   "zh-tw": {
     "cameraselector.name": "相機選擇器",
-    "cameraselector.selectCamera": "切换相机至[LIST]"
+    "cameraselector.deviceName": "設備名稱",
+    "cameraselector.selectCamera": "切换相机至[LIST]",
+    "cameraselector.selectCameraWithLabel": "切换相机至[LABEL]"
   }
 }

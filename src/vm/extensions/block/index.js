@@ -123,8 +123,26 @@ class ExtensionBlocks {
           arguments: {
             LIST: {
               type: ArgumentType.STRING,
-              defaultValue: 'default',
+              defaultValue: 'Default',
               menu: 'videoDevicesMenu',
+            },
+          },
+        },
+        {
+          opcode: 'selectCameraWithLabel',
+          blockType: BlockType.COMMAND,
+          text: formatMessage({
+            id: 'cameraselector.selectCameraWithLabel',
+            default: translations.en['cameraselector.selectCameraWithLabel'],
+            description: 'select the video device with label'
+          }),
+          arguments: {
+            LABEL: {
+              type: ArgumentType.STRING,
+              defaultValue: formatMessage({
+                id: "cameraselector.deviceName",
+                default: "Device Name"
+              }),
             },
           },
         },
@@ -139,24 +157,25 @@ class ExtensionBlocks {
   }
 
   selectCamera(args) {
-    const deviceId = args.LIST || '';
+    const label = args.LIST || args.LABEL || ''
+    this._getSelectableVideoProvider().setVideoDescriptor({ label })
     // 対応するデバイスが見つからない場合に OverconstrainedError が発生する事がありますが、その対応が実装できていない事に注意が必要です。
     // 例えば MacbookPro は背面カメラをサポートしていないので {facingMode:{exact:"environment"}} を指定するとエラーが発生し現状では他のカメラに切り替えても復帰できなくなります。
-    if (deviceId === "USER") {
-      this._getSelectableVideoProvider().setVideoDescriptor({ facingMode: "user" });
-      this.runtime.ioDevices.video.mirror = true
-    } else if (deviceId === "ENVIRONMENT") {
-      this._getSelectableVideoProvider().setVideoDescriptor({ facingMode: { exact: "environment" } })
-      this.runtime.ioDevices.video.mirror = false
-    } else {
-      this._getSelectableVideoProvider().mirror = this.runtime.ioDevices.video.mirror
-      this._getSelectableVideoProvider().setVideoDescriptor({ deviceId })
-    }
+    // if (label === "USER") {
+    //   this._getSelectableVideoProvider().setVideoDescriptor({ facingMode: "user" });
+    // } else if (label === "ENVIRONMENT") {
+    //   this._getSelectableVideoProvider().setVideoDescriptor({ facingMode: { exact: "environment" } })
+    // } else {
+    // }
+  }
+
+  selectCameraWithLabel(args) {
+    this.selectCamera(args)
   }
 
   getVideoDevicesMenu() {
     const defaultValues = [
-      { text: "default", value: "" }
+      { text: "Default", value: "" }
     ]
     // Constraints に対応するデバイスが見つからなかった場合に OverconstrainedError が発生する際の問題が未解決なので封印
     // if(navigator.mediaDevices.getSupportedConstraints().facingMode) {
@@ -167,7 +186,7 @@ class ExtensionBlocks {
     // }
     const deviceValues = this._getSelectableVideoProvider().videoDevices.map(dev => ({
       text: dev.label,
-      value: dev.deviceId
+      value: dev.label
     })).sort((a, b) => b.text < a.text)
     return defaultValues.concat(deviceValues)
   }
