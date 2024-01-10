@@ -51,6 +51,7 @@ class VideoProvider {
          * @type {Array<MediaDeviceInfo>}
          */
         this._videoDevices = [];
+        navigator.permissions.query({name: "camera"}).then(p=>p.addEventListener('change', ()=>this._updateVideoDevices()))
         navigator.mediaDevices.addEventListener("devicechange", () => this._updateVideoDevices())
         this._updateVideoDevices()
     }
