@@ -1,0 +1,14 @@
+{
+  "en": {
+    "cameraselector.name": "CameraSelector",
+    "cameraselector.doIt": "do it [SCRIPT]"
+  },
+  "ja": {
+    "cameraselector.name": "CameraSelector",
+    "cameraselector.doIt": "[SCRIPT] を実行する"
+  },
+  "ja-Hira": {
+    "cameraselector.name": "CameraSelector",
+    "cameraselector.doIt": "[SCRIPT] をじっこうする"
+  }
+}

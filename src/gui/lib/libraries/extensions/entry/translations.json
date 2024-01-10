@@ -1,0 +1,14 @@
+{
+  "en": {
+    "cameraselector.entry.name": "CameraSelector",
+    "cameraselector.entry.description": "Description of this extension"
+  },
+  "ja": {
+    "cameraselector.entry.name": "CameraSelector",
+    "cameraselector.entry.description": "拡張機能の説明"
+  },
+  "ja-Hira": {
+    "cameraselector.entry.name": "CameraSelector",
+    "cameraselector.entry.description": "かくちょうきのうのせつめい"
+  }
+}
