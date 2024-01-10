@@ -3,7 +3,7 @@
  */
 
 import iconURL from './entry-icon.png';
-import insetIconURL from './inset-icon.svg';
+import insetIconURL from './inset-icon.png';
 import translations from './translations.json';
 
 /**
@@ -18,7 +18,7 @@ const entry = {
     get name () {
         return formatMessage({
             id: 'cameraselector.entry.name',
-            default: 'CameraSelector',
+            default: translations.en['cameraselector.entry.name'],
             description: 'name of the extension'
         });
     },
@@ -29,7 +29,7 @@ const entry = {
     insetIconURL: insetIconURL,
     get description () {
         return formatMessage({
-            defaultMessage: 'an extension for Xcratch',
+            defaultMessage: translations.en['cameraselector.entry.description'],
             description: 'Description for this extension',
             id: 'cameraselector.entry.description'
         });

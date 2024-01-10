@@ -1,14 +1,22 @@
 {
   "en": {
-    "cameraselector.name": "CameraSelector",
-    "cameraselector.doIt": "do it [SCRIPT]"
+    "cameraselector.name": "Camera Selector",
+    "cameraselector.selectCamera": "Set camera to [LIST]"
   },
   "ja": {
-    "cameraselector.name": "CameraSelector",
-    "cameraselector.doIt": "[SCRIPT] を実行する"
+    "cameraselector.name": "カメラセレクター",
+    "cameraselector.selectCamera": "カメラを[LIST]に切り替える"
   },
   "ja-Hira": {
-    "cameraselector.name": "CameraSelector",
-    "cameraselector.doIt": "[SCRIPT] をじっこうする"
+    "cameraselector.name": "かめらせれくたー",
+    "cameraselector.selectCamera": "かめらを[LIST]にきりかえる"
+  },
+  "zh-cn": {
+    "cameraselector.name": "相机选择器",
+    "cameraselector.selectCamera": "切换相机至[LIST]"
+  },
+  "zh-tw": {
+    "cameraselector.name": "相機選擇器",
+    "cameraselector.selectCamera": "切换相机至[LIST]"
   }
 }

@@ -1,14 +1,14 @@
 {
   "en": {
-    "cameraselector.entry.name": "CameraSelector",
-    "cameraselector.entry.description": "Description of this extension"
+    "cameraselector.entry.name": "Camera Selector",
+    "cameraselector.entry.description": "Make the camera selectable. This is an extension to help with extensions that use all cameras."
   },
   "ja": {
-    "cameraselector.entry.name": "CameraSelector",
-    "cameraselector.entry.description": "拡張機能の説明"
+    "cameraselector.entry.name": "カメラセレクター",
+    "cameraselector.entry.description": "使用するカメラを切り替えられるようにします。"
   },
   "ja-Hira": {
-    "cameraselector.entry.name": "CameraSelector",
-    "cameraselector.entry.description": "かくちょうきのうのせつめい"
+    "cameraselector.entry.name": "かめらせれくたー",
+    "cameraselector.entry.description": "つかうかめらをえらべるようにします。"
   }
 }
