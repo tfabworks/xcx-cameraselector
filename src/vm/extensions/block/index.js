@@ -87,19 +87,12 @@ class ExtensionBlocks {
      * @type {Runtime}
      */
     this.runtime = runtime;
-    window.runtime = runtime;// DEBUG
+    window.runtime = runtime; // DEBUG
 
     if (runtime.formatMessage) {
       // Replace 'formatMessage' to a formatter which is used in the runtime.
       formatMessage = runtime.formatMessage;
     }
-  }
-
-  doIt(args) {
-    const func = new Function(`return (${Cast.toString(args.SCRIPT)})`);
-    const result = func.call(this);
-    console.log(result);
-    return result;
   }
 
   /**
