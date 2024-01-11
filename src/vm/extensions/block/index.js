@@ -123,24 +123,25 @@ class ExtensionBlocks {
             },
           },
         },
-        {
-          opcode: 'selectCameraWithLabel',
-          blockType: BlockType.COMMAND,
-          text: formatMessage({
-            id: 'cameraselector.selectCameraWithLabel',
-            default: translations.en['cameraselector.selectCameraWithLabel'],
-            description: 'select the video device with label'
-          }),
-          arguments: {
-            LABEL: {
-              type: ArgumentType.STRING,
-              defaultValue: formatMessage({
-                id: "cameraselector.deviceName",
-                default: "Device Name"
-              }),
-            },
-          },
-        },
+        // ラベル検索は混乱するので隠すことにした
+        // {
+        //   opcode: 'selectCameraWithLabel',
+        //   blockType: BlockType.COMMAND,
+        //   text: formatMessage({
+        //     id: 'cameraselector.selectCameraWithLabel',
+        //     default: translations.en['cameraselector.selectCameraWithLabel'],
+        //     description: 'select the video device with label'
+        //   }),
+        //   arguments: {
+        //     LABEL: {
+        //       type: ArgumentType.STRING,
+        //       defaultValue: formatMessage({
+        //         id: "cameraselector.deviceName",
+        //         default: "Device Name"
+        //       }),
+        //     },
+        //   },
+        // },
       ],
       menus: {
         videoDevicesMenu: {
@@ -168,9 +169,10 @@ class ExtensionBlocks {
     // }
   }
 
-  selectCameraWithLabel(args) {
-    this.selectCamera(args)
-  }
+  // ラベル検索は混乱するので隠すことにした
+  // selectCameraWithLabel(args) {
+  //   this.selectCamera(args)
+  // }
 
   getVideoDevicesMenu() {
     const defaultValues = [
