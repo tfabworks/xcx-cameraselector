@@ -159,6 +159,10 @@ class ExtensionBlocks {
       descriptor.label = label
     }
     this._getSelectableVideoProvider().setVideoDescriptor(descriptor)
+      .then(() => {
+        // 自動的にカメラをONにする
+        return this.runtime.ioDevices.video.enableVideo().catch(()=>{})
+      })
     // 対応するデバイスが見つからない場合に OverconstrainedError が発生する事がありますが、その対応が実装できていない事に注意が必要です。
     // 例えば MacbookPro は背面カメラをサポートしていないので {facingMode:{exact:"environment"}} を指定するとエラーが発生し現状では他のカメラに切り替えても復帰できなくなります。
     // if (label === "USER") {
