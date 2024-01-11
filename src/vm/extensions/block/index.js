@@ -5,6 +5,8 @@ import translations from './translations.json';
 import blockIcon from './block-icon.png';
 import { setupSelectableVideoProvider, isSelectableVideoProvider } from './lib/selectable-video-provider';
 
+const DEFAULT_VIDEO_LABEL = '\u{200b}Default\u{200b}';
+
 /**
  * Formatter which is used for translation.
  * This will be replaced which is used in the runtime.
@@ -123,7 +125,7 @@ class ExtensionBlocks {
           arguments: {
             LIST: {
               type: ArgumentType.STRING,
-              defaultValue: 'Default',
+              defaultValue: DEFAULT_VIDEO_LABEL,
               menu: 'videoDevicesMenu',
             },
           },
@@ -158,7 +160,11 @@ class ExtensionBlocks {
 
   selectCamera(args) {
     const label = args.LIST || args.LABEL || ''
-    this._getSelectableVideoProvider().setVideoDescriptor({ label })
+    const descriptor = {}
+    if(label && label !== DEFAULT_VIDEO_LABEL) {
+      descriptor.label = label
+    }
+    this._getSelectableVideoProvider().setVideoDescriptor(descriptor)
     // 対応するデバイスが見つからない場合に OverconstrainedError が発生する事がありますが、その対応が実装できていない事に注意が必要です。
     // 例えば MacbookPro は背面カメラをサポートしていないので {facingMode:{exact:"environment"}} を指定するとエラーが発生し現状では他のカメラに切り替えても復帰できなくなります。
     // if (label === "USER") {
@@ -175,7 +181,7 @@ class ExtensionBlocks {
 
   getVideoDevicesMenu() {
     const defaultValues = [
-      { text: "Default", value: "" }
+      { text: 'Default', value: DEFAULT_VIDEO_LABEL} // 既存のカメラ名に Default を含むものが選ばれないようゼロ幅スペース付きの値をデフォルト値として使用する
     ]
     // Constraints に対応するデバイスが見つからなかった場合に OverconstrainedError が発生する際の問題が未解決なので封印
     // if(navigator.mediaDevices.getSupportedConstraints().facingMode) {

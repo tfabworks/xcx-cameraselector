@@ -1908,6 +1908,8 @@ var isSelectableVideoProvider = function isSelectableVideoProvider(videoProvider
 };
 var SelectableVideoProvider = VideoProvider;
 
+var DEFAULT_VIDEO_LABEL = "\u200BDefault\u200B";
+
 /**
  * Formatter which is used for translation.
  * This will be replaced which is used in the runtime.
@@ -1991,7 +1993,7 @@ var ExtensionBlocks = /*#__PURE__*/function () {
           arguments: {
             LIST: {
               type: argumentType.STRING,
-              defaultValue: 'Default',
+              defaultValue: DEFAULT_VIDEO_LABEL,
               menu: 'videoDevicesMenu'
             }
           }
@@ -2025,9 +2027,11 @@ var ExtensionBlocks = /*#__PURE__*/function () {
     key: "selectCamera",
     value: function selectCamera(args) {
       var label = args.LIST || args.LABEL || '';
-      this._getSelectableVideoProvider().setVideoDescriptor({
-        label: label
-      });
+      var descriptor = {};
+      if (label && label !== DEFAULT_VIDEO_LABEL) {
+        descriptor.label = label;
+      }
+      this._getSelectableVideoProvider().setVideoDescriptor(descriptor);
       // 対応するデバイスが見つからない場合に OverconstrainedError が発生する事がありますが、その対応が実装できていない事に注意が必要です。
       // 例えば MacbookPro は背面カメラをサポートしていないので {facingMode:{exact:"environment"}} を指定するとエラーが発生し現状では他のカメラに切り替えても復帰できなくなります。
       // if (label === "USER") {
@@ -2046,9 +2050,10 @@ var ExtensionBlocks = /*#__PURE__*/function () {
     key: "getVideoDevicesMenu",
     value: function getVideoDevicesMenu() {
       var defaultValues = [{
-        text: "Default",
-        value: ""
-      }];
+        text: 'Default',
+        value: DEFAULT_VIDEO_LABEL
+      } // 既存のカメラ名に Default を含むものが選ばれないようゼロ幅スペース付きの値をデフォルト値として使用する
+      ];
       // Constraints に対応するデバイスが見つからなかった場合に OverconstrainedError が発生する際の問題が未解決なので封印
       // if(navigator.mediaDevices.getSupportedConstraints().facingMode) {
       //   defaultValues.push(
