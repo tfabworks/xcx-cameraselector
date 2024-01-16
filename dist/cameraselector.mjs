@@ -395,7 +395,6 @@ var getUserMediaPromise = {exports: {}};
     }
   })(commonjsGlobal);
 })(getUserMediaPromise);
-var getUserMedia = getUserMediaPromise.exports;
 
 // Single Setup For All Video Streams used by the GUI
 // While VideoProvider uses a private _singleSetup
@@ -405,20 +404,6 @@ var getUserMedia = getUserMediaPromise.exports;
 // does not affect the video on the stage, and a program running and disabling
 // video on the stage will not affect the camera modal's video.
 var requestStack = [];
-var requestVideoStream = function requestVideoStream(videoDesc) {
-  var streamPromise;
-  if (requestStack.length === 0) {
-    streamPromise = getUserMedia({
-      audio: false,
-      video: videoDesc
-    });
-    requestStack.push(streamPromise);
-  } else if (requestStack.length > 0) {
-    streamPromise = requestStack[0];
-    requestStack.push(true);
-  }
-  return streamPromise;
-};
 var requestDisableVideo = function requestDisableVideo() {
   requestStack.pop();
   if (requestStack.length > 0) return false;
@@ -962,6 +947,12 @@ var VideoProvider = /*#__PURE__*/function () {
     this._workspace = [];
 
     /**
+     * Usermedia stream
+     * @private
+     */
+    this._stream = null;
+
+    /**
      * The video descriptor used in getUserMedia
      * @type {MediaStreamConstraints['video']}
      */
@@ -1029,8 +1020,10 @@ var VideoProvider = /*#__PURE__*/function () {
       var _this2 = this;
       this.enabled = false;
       // If we have begun a setup process, call _teardown after it completes
-      if (this._singleSetup) {
-        return this._singleSetup.then(this._teardown.bind(this)).catch(function (err) {
+      if (this._singleSetup && typeof this._singleSetup.then === "function") {
+        return this._singleSetup.then(function () {
+          return _this2._teardown();
+        }).catch(function (err) {
           return _this2.onError(err);
         });
       }
@@ -1169,18 +1162,29 @@ var VideoProvider = /*#__PURE__*/function () {
       if (this._singleSetup) {
         return this._singleSetup;
       }
-      this._singleSetup = requestVideoStream(Object.assign({
-        width: {
-          min: 480,
-          ideal: 640
-        },
-        height: {
-          min: 360,
-          ideal: 480
+      this._singleSetup = navigator.mediaDevices.getUserMedia({
+        audio: false,
+        video: Object.assign({
+          width: {
+            min: 480,
+            ideal: 640
+          },
+          height: {
+            min: 360,
+            ideal: 480
+          }
+        }, this._videoDescriptor)
+      }).then(function (stream) {
+        if (_this3._video == null) {
+          _this3._video = document.createElement('video');
+        } else {
+          if (!_this3.video.paused) {
+            _this3.video.pause();
+          }
         }
-      }, this._videoDescriptor)).then(function (stream) {
-        _this3._video = document.createElement('video');
-
+        if (_this3._track && _this3._track.enabled) {
+          _this3._track.stop();
+        }
         // Use the new srcObject API, falling back to createObjectURL
         try {
           _this3._video.srcObject = stream;
@@ -1194,6 +1198,7 @@ var VideoProvider = /*#__PURE__*/function () {
         // needed.
         _this3._video.play(); // Needed for Safari/Firefox, Chrome auto-plays.
         _this3._track = stream.getTracks()[0];
+        _this3._stream = stream;
         return _this3;
       }).catch(function (error) {
         _this3._singleSetup = null;
@@ -1395,6 +1400,9 @@ var setupSelectableVideoProvider = function setupSelectableVideoProvider(runtime
   var oldProvider = runtime.ioDevices.video.provider;
   var oldVideoReady = oldProvider != null && oldProvider.videoReady;
   if (oldProvider != null) {
+    newProvider._workspace = oldProvider._workspace;
+    newProvider._track = oldProvider._track;
+    newProvider._video = oldProvider._video;
     newProvider.mirror = oldProvider.mirror;
     if (oldProvider.videoReady) {
       oldProvider.disableVideo();
