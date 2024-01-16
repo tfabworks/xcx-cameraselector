@@ -153,8 +153,7 @@ class SelectableVideoProvider {
             this._stream.getTracks().forEach(track => track.stop())
         }
         if(this._video) {
-            this._video.srcObject = null
-            this._video.src = null
+            this._video.src = ''
         }
         this._stream = null;
         this._track = null;
