@@ -40,6 +40,12 @@ class VideoProvider {
         this._workspace = [];
 
         /**
+         * Usermedia stream
+         * @private
+         */
+        this._stream = null;
+
+        /**
          * The video descriptor used in getUserMedia
          * @type {MediaStreamConstraints['video']}
          */
@@ -115,9 +121,9 @@ class VideoProvider {
     disableVideo() {
         this.enabled = false;
         // If we have begun a setup process, call _teardown after it completes
-        if (this._singleSetup) {
+        if (this._singleSetup && typeof this._singleSetup.then === "function") {
             return this._singleSetup
-                .then(this._teardown.bind(this))
+                .then(() => this._teardown())
                 .catch(err => this.onError(err));
         }
         return Promise.resolve()
@@ -237,10 +243,13 @@ class VideoProvider {
             return this._singleSetup;
         }
 
-        this._singleSetup = requestVideoStream(Object.assign({
-            width: { min: 480, ideal: 640 },
-            height: { min: 360, ideal: 480 }
-        }, this._videoDescriptor))
+        this._singleSetup = navigator.mediaDevices.getUserMedia({
+            audio: false,
+            video: Object.assign({
+                    width: { min: 480, ideal: 640 },
+                    height: { min: 360, ideal: 480 }
+                }, this._videoDescriptor)
+            })
             .then(stream => {
                 if(this._video == null) {
                     this._video = document.createElement('video');
@@ -248,6 +257,9 @@ class VideoProvider {
                     if(!this.video.paused) {
                         this.video.pause()
                     }
+                }
+                if(this._track && this._track.enabled) {
+                    this._track.stop()
                 }
                 // Use the new srcObject API, falling back to createObjectURL
                 try {
@@ -262,6 +274,7 @@ class VideoProvider {
                 // needed.
                 this._video.play(); // Needed for Safari/Firefox, Chrome auto-plays.
                 this._track = stream.getTracks()[0];
+                this._stream = stream;
                 return this;
             })
             .catch(error => {
