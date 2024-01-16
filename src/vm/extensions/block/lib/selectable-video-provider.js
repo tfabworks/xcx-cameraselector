@@ -128,9 +128,15 @@ class SelectableVideoProvider {
                 // hide the video tag and instead render a sample of the stream into
                 // the webgl rendered Scratch canvas, another hint like this one is
                 // needed.
-                this._video.play(); // Needed for Safari/Firefox, Chrome auto-plays.
-                this._track = stream.getTracks()[0];
-                this._stream = stream;
+                // Needed for Safari/Firefox, Chrome auto-plays.
+                const playPromise = this._video.play();
+
+                // video.play() が非同期であることに関する注意ドキュメント
+                // https://developer.chrome.com/blog/play-request-was-interrupted?hl=ja
+                return playPromise.then(() => {
+                    this._track = stream.getTracks()[0];
+                    this._stream = stream;
+                })
             })
             .catch(err => {
                 this.disableVideo()
