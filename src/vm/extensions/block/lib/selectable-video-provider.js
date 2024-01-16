@@ -1,14 +1,9 @@
-import { requestVideoStream, requestDisableVideo } from './camera.js';
-// import log from '../log.js';
-import minilog from 'minilog';
-minilog.enable();
-const log = minilog('gui');
-
-
 /**
  * Video Manager for video extensions.
+ *
+ * https://github.com/scratchfoundation/scratch-gui/blob/develop/src/lib/video/video-provider.js
  */
-class VideoProvider {
+class SelectableVideoProvider {
     constructor() {
         /**
          * Default value for mirrored frames.
@@ -100,7 +95,7 @@ class VideoProvider {
      * @type {Array<MediaDeviceInfo>}
      */
     get videoDevices() {
-        return this._videoDevices;
+        return this._videoDevices
     }
 
     /**
@@ -110,41 +105,53 @@ class VideoProvider {
      */
     enableVideo() {
         this.enabled = true;
-        return this._setupVideo();
+        return navigator.mediaDevices.getUserMedia({
+            audio: false,
+            video: Object.assign({
+                    width: { min: 480, ideal: 640 },
+                    height: { min: 360, ideal: 480 }
+                }, this._videoDescriptor)
+            })
+            .then(stream => {
+                if(this._video == null) {
+                    this._video = document.createElement('video');
+                }
+                // 既存のストリームは先に閉じる
+                this.disableVideo()
+                try {
+                    this._video.srcObject = stream;
+                } catch (error) {
+                    this._video.src = window.URL.createObjectURL(stream);
+                }
+                // Hint to the stream that it should load. A standard way to do this
+                // is add the video tag to the DOM. Since this extension wants to
+                // hide the video tag and instead render a sample of the stream into
+                // the webgl rendered Scratch canvas, another hint like this one is
+                // needed.
+                this._video.play(); // Needed for Safari/Firefox, Chrome auto-plays.
+                this._track = stream.getTracks()[0];
+                this._stream = stream;
+            })
+            .catch(err => {
+                this.disableVideo()
+                console.error("[SelectableVideoProvider] Unhandled error", err);
+            });
     }
 
     /**
      * Disable video stream (turn video off)
-     *
-     * @return {Promise.<Video>} resolves a promise to this video provider when video is disabled.
      */
     disableVideo() {
         this.enabled = false;
-        // If we have begun a setup process, call _teardown after it completes
-        if (this._singleSetup && typeof this._singleSetup.then === "function") {
-            return this._singleSetup
-                .then(() => this._teardown())
-                .catch(err => this.onError(err));
+        if (this._stream) {
+            this._stream.getTracks().forEach(track => track.stop())
         }
-        return Promise.resolve()
-    }
-
-    /**
-     * async part of disableVideo
-     * @private
-     */
-    _teardown() {
-        // we might be asked to re-enable before _teardown is called, just ignore it.
-        if (this.enabled === false) {
-            const disableTrack = requestDisableVideo();
-            this._singleSetup = null;
-            // by clearing refs to video and track, we should lose our hold over the camera
-            this._video = null;
-            if (this._track && disableTrack) {
-                this._track.stop();
-            }
-            this._track = null;
+        if(this._video) {
+            this._video.srcObject = null
+            this._video.src = null
         }
+        this._stream = null;
+        this._track = null;
     }
 
     /**
@@ -208,7 +215,7 @@ class VideoProvider {
                 formatCache.lastUpdate = Infinity;
                 formatCache.lastData = canvas;
             } else {
-                log.error(`video io error - unimplemented format ${format}`);
+                console.error(`[SelectableVideoProvider] video io error - unimplemented format ${format}`);
                 // cache the null result forever, don't log about it again..
                 formatCache.lastUpdate = Infinity;
                 formatCache.lastData = null;
@@ -219,70 +226,6 @@ class VideoProvider {
         }
 
         return formatCache.lastData;
-    }
-
-    /**
-     * Method called when an error happens.  Default implementation is just to log error.
-     *
-     * @abstract
-     * @param {Error} error An error object from getUserMedia or other source of error.
-     */
-    onError(error) {
-        log.error('Unhandled video io device error', error);
-    }
-
-    /**
-     * Create a video stream.
-     * @private
-     * @return {Promise} When video has been received, rejected if video is not received
-     */
-    _setupVideo() {
-        // We cache the result of this setup so that we can only ever have a single
-        // video/getUserMedia request happen at a time.
-        if (this._singleSetup) {
-            return this._singleSetup;
-        }
-
-        this._singleSetup = navigator.mediaDevices.getUserMedia({
-            audio: false,
-            video: Object.assign({
-                    width: { min: 480, ideal: 640 },
-                    height: { min: 360, ideal: 480 }
-                }, this._videoDescriptor)
-            })
-            .then(stream => {
-                if(this._video == null) {
-                    this._video = document.createElement('video');
-                } else {
-                    if(!this.video.paused) {
-                        this.video.pause()
-                    }
-                }
-                if(this._track && this._track.enabled) {
-                    this._track.stop()
-                }
-                // Use the new srcObject API, falling back to createObjectURL
-                try {
-                    this._video.srcObject = stream;
-                } catch (error) {
-                    this._video.src = window.URL.createObjectURL(stream);
-                }
-                // Hint to the stream that it should load. A standard way to do this
-                // is add the video tag to the DOM. Since this extension wants to
-                // hide the video tag and instead render a sample of the stream into
-                // the webgl rendered Scratch canvas, another hint like this one is
-                // needed.
-                this._video.play(); // Needed for Safari/Firefox, Chrome auto-plays.
-                this._track = stream.getTracks()[0];
-                this._stream = stream;
-                return this;
-            })
-            .catch(error => {
-                this._singleSetup = null;
-                this.onError(error);
-            });
-
-        return this._singleSetup;
     }
 
     get videoReady() {
@@ -341,32 +284,25 @@ class VideoProvider {
      *                           or rejects with an error if the update fails.
      */
     setVideoDescriptor(videoDescriptor) {
-        if (JSON.stringify(videoDescriptor) === JSON.stringify(this._videoDescriptor)) {
-            return Promise.resolve()
-        }
-        const oldVideoDescriptor = this._videoDescriptor
         this._videoDescriptor = videoDescriptor;
-        const dev = this._findDesiredVideoDevice()
-        if(dev != null) {
-            this._videoDescriptor = { deviceId: dev.deviceId }
-            if (JSON.stringify(oldVideoDescriptor) === JSON.stringify(this._videoDescriptor)) {
+        const newDev = this._findDesiredVideoDevice(videoDescriptor)
+        if(newDev != null && this._track != null) {
+            if(newDev.deviceId === this._track.getCapabilities().deviceId) {
+                // no change
                 return Promise.resolve()
             }
         }
-        const currentVideoReady = this.videoReady
-        return this.disableVideo().then(() => {
-            this._singleSetup = null;
-            if (currentVideoReady) {
-                return this.enableVideo()
-            }
-        })
+        if(this.videoReady) {
+            this.disableVideo()
+            return this.enableVideo()
+        }
+        return Promise.resolve()
     }
 
     /**
      *
      */
-    _findDesiredVideoDevice() {
-        const videoDescriptor = this._videoDescriptor
+    _findDesiredVideoDevice(videoDescriptor) {
         if (typeof videoDescriptor.deviceId !== "undefined" && videoDescriptor.deviceId !== "") {
             return this._videoDevices.find(dev => dev.deviceId === videoDescriptor.deviceId)
         }
@@ -389,21 +325,15 @@ class VideoProvider {
      * @private
      */
     _updateVideoDevices() {
-        console.log("_updateVideoDevices")
         navigator.mediaDevices.enumerateDevices()
             .catch(() => [])
             .then((devices) => {
-                this._videoDevices = devices
-                    .filter(d => d.deviceId && d.kind === 'videoinput')
-                    .sort((a, b) => b.label < a.label);
-            })
-            .then(devices => {
+                this._videoDevices = devices.filter(d => d.kind === 'videoinput')
                 // 希望デバイスの指定がある場合はカメラを切り替える
-                const dev = this._findDesiredVideoDevice()
+                const dev = this._findDesiredVideoDevice(this._videoDescriptor)
                 if(dev != null) {
                     this.setVideoDescriptor(dev)
                 }
-                return devices
             })
     }
 
@@ -451,5 +381,5 @@ export const isSelectableVideoProvider = (videoProvider) => {
         && typeof videoProvider.setVideoDescriptor !== "undefined"
 }
 
-export const SelectableVideoProvider = VideoProvider
+export const VideoProvider = SelectableVideoProvider
 export default VideoProvider;

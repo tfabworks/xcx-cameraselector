@@ -158,7 +158,7 @@ class ExtensionBlocks {
     if(label && label !== DEFAULT_VIDEO_LABEL) {
       descriptor.label = label
     }
-    this._getSelectableVideoProvider().setVideoDescriptor(descriptor)
+    return this._getSelectableVideoProvider().setVideoDescriptor(descriptor)
       .then(() => {
         // 自動的にカメラをONにする
         return this.runtime.ioDevices.video.enableVideo().catch(()=>{})
