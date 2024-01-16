@@ -242,8 +242,13 @@ class VideoProvider {
             height: { min: 360, ideal: 480 }
         }, this._videoDescriptor))
             .then(stream => {
-                this._video = document.createElement('video');
-
+                if(this._video == null) {
+                    this._video = document.createElement('video');
+                } else {
+                    if(!this.video.paused) {
+                        this.video.pause()
+                    }
+                }
                 // Use the new srcObject API, falling back to createObjectURL
                 try {
                     this._video.srcObject = stream;
@@ -406,6 +411,9 @@ export const setupSelectableVideoProvider = (runtime) => {
     const oldProvider = runtime.ioDevices.video.provider
     const oldVideoReady = oldProvider != null && oldProvider.videoReady
     if (oldProvider != null) {
+        newProvider._workspace = oldProvider._workspace
+        newProvider._track = oldProvider._track
+        newProvider._video = oldProvider._video
         newProvider.mirror = oldProvider.mirror
         if (oldProvider.videoReady) {
             oldProvider.disableVideo()
