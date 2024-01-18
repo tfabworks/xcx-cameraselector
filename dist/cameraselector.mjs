@@ -63,28 +63,90 @@ var entry = {
   translationMap: translations$1
 };
 
+function _arrayLikeToArray(arr, len) {
+  if (len == null || len > arr.length) len = arr.length;
+  for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i];
+  return arr2;
+}
+
+function _arrayWithoutHoles(arr) {
+  if (Array.isArray(arr)) return _arrayLikeToArray(arr);
+}
+
+function _iterableToArray(iter) {
+  if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter);
+}
+
+function _unsupportedIterableToArray(o, minLen) {
+  if (!o) return;
+  if (typeof o === "string") return _arrayLikeToArray(o, minLen);
+  var n = Object.prototype.toString.call(o).slice(8, -1);
+  if (n === "Object" && o.constructor) n = o.constructor.name;
+  if (n === "Map" || n === "Set") return Array.from(o);
+  if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen);
+}
+
+function _nonIterableSpread() {
+  throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
+}
+
+function _toConsumableArray(arr) {
+  return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread();
+}
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) {
+  try {
+    var info = gen[key](arg);
+    var value = info.value;
+  } catch (error) {
+    reject(error);
+    return;
+  }
+  if (info.done) {
+    resolve(value);
+  } else {
+    Promise.resolve(value).then(_next, _throw);
+  }
+}
+function _asyncToGenerator(fn) {
+  return function () {
+    var self = this,
+      args = arguments;
+    return new Promise(function (resolve, reject) {
+      var gen = fn.apply(self, args);
+      function _next(value) {
+        asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value);
+      }
+      function _throw(err) {
+        asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err);
+      }
+      _next(undefined);
+    });
+  };
+}
+
 function _classCallCheck(instance, Constructor) {
   if (!(instance instanceof Constructor)) {
     throw new TypeError("Cannot call a class as a function");
   }
 }
 
-function _typeof(obj) {
+function _typeof$1(obj) {
   "@babel/helpers - typeof";
 
-  return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) {
+  return _typeof$1 = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) {
     return typeof obj;
   } : function (obj) {
     return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
-  }, _typeof(obj);
+  }, _typeof$1(obj);
 }
 
 function _toPrimitive(input, hint) {
-  if (_typeof(input) !== "object" || input === null) return input;
+  if (_typeof$1(input) !== "object" || input === null) return input;
   var prim = input[Symbol.toPrimitive];
   if (prim !== undefined) {
     var res = prim.call(input, hint || "default");
-    if (_typeof(res) !== "object") return res;
+    if (_typeof$1(res) !== "object") return res;
     throw new TypeError("@@toPrimitive must return a primitive value.");
   }
   return (hint === "string" ? String : Number)(input);
@@ -92,7 +154,7 @@ function _toPrimitive(input, hint) {
 
 function _toPropertyKey(arg) {
   var key = _toPrimitive(arg, "string");
-  return _typeof(key) === "symbol" ? key : String(key);
+  return _typeof$1(key) === "symbol" ? key : String(key);
 }
 
 function _defineProperties(target, props) {
@@ -113,7 +175,346 @@ function _createClass(Constructor, protoProps, staticProps) {
   return Constructor;
 }
 
-var commonjsGlobal = typeof globalThis !== 'undefined' ? globalThis : typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : {};
+var regeneratorRuntime$1 = {exports: {}};
+
+var _typeof = {exports: {}};
+
+(function (module) {
+  function _typeof(obj) {
+    "@babel/helpers - typeof";
+
+    return (module.exports = _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) {
+      return typeof obj;
+    } : function (obj) {
+      return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
+    }, module.exports.__esModule = true, module.exports["default"] = module.exports), _typeof(obj);
+  }
+  module.exports = _typeof, module.exports.__esModule = true, module.exports["default"] = module.exports;
+})(_typeof);
+
+(function (module) {
+  var _typeof$1 = _typeof.exports["default"];
+  function _regeneratorRuntime() {
+
+    /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/facebook/regenerator/blob/main/LICENSE */
+    module.exports = _regeneratorRuntime = function _regeneratorRuntime() {
+      return exports;
+    }, module.exports.__esModule = true, module.exports["default"] = module.exports;
+    var exports = {},
+      Op = Object.prototype,
+      hasOwn = Op.hasOwnProperty,
+      defineProperty = Object.defineProperty || function (obj, key, desc) {
+        obj[key] = desc.value;
+      },
+      $Symbol = "function" == typeof Symbol ? Symbol : {},
+      iteratorSymbol = $Symbol.iterator || "@@iterator",
+      asyncIteratorSymbol = $Symbol.asyncIterator || "@@asyncIterator",
+      toStringTagSymbol = $Symbol.toStringTag || "@@toStringTag";
+    function define(obj, key, value) {
+      return Object.defineProperty(obj, key, {
+        value: value,
+        enumerable: !0,
+        configurable: !0,
+        writable: !0
+      }), obj[key];
+    }
+    try {
+      define({}, "");
+    } catch (err) {
+      define = function define(obj, key, value) {
+        return obj[key] = value;
+      };
+    }
+    function wrap(innerFn, outerFn, self, tryLocsList) {
+      var protoGenerator = outerFn && outerFn.prototype instanceof Generator ? outerFn : Generator,
+        generator = Object.create(protoGenerator.prototype),
+        context = new Context(tryLocsList || []);
+      return defineProperty(generator, "_invoke", {
+        value: makeInvokeMethod(innerFn, self, context)
+      }), generator;
+    }
+    function tryCatch(fn, obj, arg) {
+      try {
+        return {
+          type: "normal",
+          arg: fn.call(obj, arg)
+        };
+      } catch (err) {
+        return {
+          type: "throw",
+          arg: err
+        };
+      }
+    }
+    exports.wrap = wrap;
+    var ContinueSentinel = {};
+    function Generator() {}
+    function GeneratorFunction() {}
+    function GeneratorFunctionPrototype() {}
+    var IteratorPrototype = {};
+    define(IteratorPrototype, iteratorSymbol, function () {
+      return this;
+    });
+    var getProto = Object.getPrototypeOf,
+      NativeIteratorPrototype = getProto && getProto(getProto(values([])));
+    NativeIteratorPrototype && NativeIteratorPrototype !== Op && hasOwn.call(NativeIteratorPrototype, iteratorSymbol) && (IteratorPrototype = NativeIteratorPrototype);
+    var Gp = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(IteratorPrototype);
+    function defineIteratorMethods(prototype) {
+      ["next", "throw", "return"].forEach(function (method) {
+        define(prototype, method, function (arg) {
+          return this._invoke(method, arg);
+        });
+      });
+    }
+    function AsyncIterator(generator, PromiseImpl) {
+      function invoke(method, arg, resolve, reject) {
+        var record = tryCatch(generator[method], generator, arg);
+        if ("throw" !== record.type) {
+          var result = record.arg,
+            value = result.value;
+          return value && "object" == _typeof$1(value) && hasOwn.call(value, "__await") ? PromiseImpl.resolve(value.__await).then(function (value) {
+            invoke("next", value, resolve, reject);
+          }, function (err) {
+            invoke("throw", err, resolve, reject);
+          }) : PromiseImpl.resolve(value).then(function (unwrapped) {
+            result.value = unwrapped, resolve(result);
+          }, function (error) {
+            return invoke("throw", error, resolve, reject);
+          });
+        }
+        reject(record.arg);
+      }
+      var previousPromise;
+      defineProperty(this, "_invoke", {
+        value: function value(method, arg) {
+          function callInvokeWithMethodAndArg() {
+            return new PromiseImpl(function (resolve, reject) {
+              invoke(method, arg, resolve, reject);
+            });
+          }
+          return previousPromise = previousPromise ? previousPromise.then(callInvokeWithMethodAndArg, callInvokeWithMethodAndArg) : callInvokeWithMethodAndArg();
+        }
+      });
+    }
+    function makeInvokeMethod(innerFn, self, context) {
+      var state = "suspendedStart";
+      return function (method, arg) {
+        if ("executing" === state) throw new Error("Generator is already running");
+        if ("completed" === state) {
+          if ("throw" === method) throw arg;
+          return doneResult();
+        }
+        for (context.method = method, context.arg = arg;;) {
+          var delegate = context.delegate;
+          if (delegate) {
+            var delegateResult = maybeInvokeDelegate(delegate, context);
+            if (delegateResult) {
+              if (delegateResult === ContinueSentinel) continue;
+              return delegateResult;
+            }
+          }
+          if ("next" === context.method) context.sent = context._sent = context.arg;else if ("throw" === context.method) {
+            if ("suspendedStart" === state) throw state = "completed", context.arg;
+            context.dispatchException(context.arg);
+          } else "return" === context.method && context.abrupt("return", context.arg);
+          state = "executing";
+          var record = tryCatch(innerFn, self, context);
+          if ("normal" === record.type) {
+            if (state = context.done ? "completed" : "suspendedYield", record.arg === ContinueSentinel) continue;
+            return {
+              value: record.arg,
+              done: context.done
+            };
+          }
+          "throw" === record.type && (state = "completed", context.method = "throw", context.arg = record.arg);
+        }
+      };
+    }
+    function maybeInvokeDelegate(delegate, context) {
+      var methodName = context.method,
+        method = delegate.iterator[methodName];
+      if (undefined === method) return context.delegate = null, "throw" === methodName && delegate.iterator["return"] && (context.method = "return", context.arg = undefined, maybeInvokeDelegate(delegate, context), "throw" === context.method) || "return" !== methodName && (context.method = "throw", context.arg = new TypeError("The iterator does not provide a '" + methodName + "' method")), ContinueSentinel;
+      var record = tryCatch(method, delegate.iterator, context.arg);
+      if ("throw" === record.type) return context.method = "throw", context.arg = record.arg, context.delegate = null, ContinueSentinel;
+      var info = record.arg;
+      return info ? info.done ? (context[delegate.resultName] = info.value, context.next = delegate.nextLoc, "return" !== context.method && (context.method = "next", context.arg = undefined), context.delegate = null, ContinueSentinel) : info : (context.method = "throw", context.arg = new TypeError("iterator result is not an object"), context.delegate = null, ContinueSentinel);
+    }
+    function pushTryEntry(locs) {
+      var entry = {
+        tryLoc: locs[0]
+      };
+      1 in locs && (entry.catchLoc = locs[1]), 2 in locs && (entry.finallyLoc = locs[2], entry.afterLoc = locs[3]), this.tryEntries.push(entry);
+    }
+    function resetTryEntry(entry) {
+      var record = entry.completion || {};
+      record.type = "normal", delete record.arg, entry.completion = record;
+    }
+    function Context(tryLocsList) {
+      this.tryEntries = [{
+        tryLoc: "root"
+      }], tryLocsList.forEach(pushTryEntry, this), this.reset(!0);
+    }
+    function values(iterable) {
+      if (iterable) {
+        var iteratorMethod = iterable[iteratorSymbol];
+        if (iteratorMethod) return iteratorMethod.call(iterable);
+        if ("function" == typeof iterable.next) return iterable;
+        if (!isNaN(iterable.length)) {
+          var i = -1,
+            next = function next() {
+              for (; ++i < iterable.length;) if (hasOwn.call(iterable, i)) return next.value = iterable[i], next.done = !1, next;
+              return next.value = undefined, next.done = !0, next;
+            };
+          return next.next = next;
+        }
+      }
+      return {
+        next: doneResult
+      };
+    }
+    function doneResult() {
+      return {
+        value: undefined,
+        done: !0
+      };
+    }
+    return GeneratorFunction.prototype = GeneratorFunctionPrototype, defineProperty(Gp, "constructor", {
+      value: GeneratorFunctionPrototype,
+      configurable: !0
+    }), defineProperty(GeneratorFunctionPrototype, "constructor", {
+      value: GeneratorFunction,
+      configurable: !0
+    }), GeneratorFunction.displayName = define(GeneratorFunctionPrototype, toStringTagSymbol, "GeneratorFunction"), exports.isGeneratorFunction = function (genFun) {
+      var ctor = "function" == typeof genFun && genFun.constructor;
+      return !!ctor && (ctor === GeneratorFunction || "GeneratorFunction" === (ctor.displayName || ctor.name));
+    }, exports.mark = function (genFun) {
+      return Object.setPrototypeOf ? Object.setPrototypeOf(genFun, GeneratorFunctionPrototype) : (genFun.__proto__ = GeneratorFunctionPrototype, define(genFun, toStringTagSymbol, "GeneratorFunction")), genFun.prototype = Object.create(Gp), genFun;
+    }, exports.awrap = function (arg) {
+      return {
+        __await: arg
+      };
+    }, defineIteratorMethods(AsyncIterator.prototype), define(AsyncIterator.prototype, asyncIteratorSymbol, function () {
+      return this;
+    }), exports.AsyncIterator = AsyncIterator, exports.async = function (innerFn, outerFn, self, tryLocsList, PromiseImpl) {
+      void 0 === PromiseImpl && (PromiseImpl = Promise);
+      var iter = new AsyncIterator(wrap(innerFn, outerFn, self, tryLocsList), PromiseImpl);
+      return exports.isGeneratorFunction(outerFn) ? iter : iter.next().then(function (result) {
+        return result.done ? result.value : iter.next();
+      });
+    }, defineIteratorMethods(Gp), define(Gp, toStringTagSymbol, "Generator"), define(Gp, iteratorSymbol, function () {
+      return this;
+    }), define(Gp, "toString", function () {
+      return "[object Generator]";
+    }), exports.keys = function (val) {
+      var object = Object(val),
+        keys = [];
+      for (var key in object) keys.push(key);
+      return keys.reverse(), function next() {
+        for (; keys.length;) {
+          var key = keys.pop();
+          if (key in object) return next.value = key, next.done = !1, next;
+        }
+        return next.done = !0, next;
+      };
+    }, exports.values = values, Context.prototype = {
+      constructor: Context,
+      reset: function reset(skipTempReset) {
+        if (this.prev = 0, this.next = 0, this.sent = this._sent = undefined, this.done = !1, this.delegate = null, this.method = "next", this.arg = undefined, this.tryEntries.forEach(resetTryEntry), !skipTempReset) for (var name in this) "t" === name.charAt(0) && hasOwn.call(this, name) && !isNaN(+name.slice(1)) && (this[name] = undefined);
+      },
+      stop: function stop() {
+        this.done = !0;
+        var rootRecord = this.tryEntries[0].completion;
+        if ("throw" === rootRecord.type) throw rootRecord.arg;
+        return this.rval;
+      },
+      dispatchException: function dispatchException(exception) {
+        if (this.done) throw exception;
+        var context = this;
+        function handle(loc, caught) {
+          return record.type = "throw", record.arg = exception, context.next = loc, caught && (context.method = "next", context.arg = undefined), !!caught;
+        }
+        for (var i = this.tryEntries.length - 1; i >= 0; --i) {
+          var entry = this.tryEntries[i],
+            record = entry.completion;
+          if ("root" === entry.tryLoc) return handle("end");
+          if (entry.tryLoc <= this.prev) {
+            var hasCatch = hasOwn.call(entry, "catchLoc"),
+              hasFinally = hasOwn.call(entry, "finallyLoc");
+            if (hasCatch && hasFinally) {
+              if (this.prev < entry.catchLoc) return handle(entry.catchLoc, !0);
+              if (this.prev < entry.finallyLoc) return handle(entry.finallyLoc);
+            } else if (hasCatch) {
+              if (this.prev < entry.catchLoc) return handle(entry.catchLoc, !0);
+            } else {
+              if (!hasFinally) throw new Error("try statement without catch or finally");
+              if (this.prev < entry.finallyLoc) return handle(entry.finallyLoc);
+            }
+          }
+        }
+      },
+      abrupt: function abrupt(type, arg) {
+        for (var i = this.tryEntries.length - 1; i >= 0; --i) {
+          var entry = this.tryEntries[i];
+          if (entry.tryLoc <= this.prev && hasOwn.call(entry, "finallyLoc") && this.prev < entry.finallyLoc) {
+            var finallyEntry = entry;
+            break;
+          }
+        }
+        finallyEntry && ("break" === type || "continue" === type) && finallyEntry.tryLoc <= arg && arg <= finallyEntry.finallyLoc && (finallyEntry = null);
+        var record = finallyEntry ? finallyEntry.completion : {};
+        return record.type = type, record.arg = arg, finallyEntry ? (this.method = "next", this.next = finallyEntry.finallyLoc, ContinueSentinel) : this.complete(record);
+      },
+      complete: function complete(record, afterLoc) {
+        if ("throw" === record.type) throw record.arg;
+        return "break" === record.type || "continue" === record.type ? this.next = record.arg : "return" === record.type ? (this.rval = this.arg = record.arg, this.method = "return", this.next = "end") : "normal" === record.type && afterLoc && (this.next = afterLoc), ContinueSentinel;
+      },
+      finish: function finish(finallyLoc) {
+        for (var i = this.tryEntries.length - 1; i >= 0; --i) {
+          var entry = this.tryEntries[i];
+          if (entry.finallyLoc === finallyLoc) return this.complete(entry.completion, entry.afterLoc), resetTryEntry(entry), ContinueSentinel;
+        }
+      },
+      "catch": function _catch(tryLoc) {
+        for (var i = this.tryEntries.length - 1; i >= 0; --i) {
+          var entry = this.tryEntries[i];
+          if (entry.tryLoc === tryLoc) {
+            var record = entry.completion;
+            if ("throw" === record.type) {
+              var thrown = record.arg;
+              resetTryEntry(entry);
+            }
+            return thrown;
+          }
+        }
+        throw new Error("illegal catch attempt");
+      },
+      delegateYield: function delegateYield(iterable, resultName, nextLoc) {
+        return this.delegate = {
+          iterator: values(iterable),
+          resultName: resultName,
+          nextLoc: nextLoc
+        }, "next" === this.method && (this.arg = undefined), ContinueSentinel;
+      }
+    }, exports;
+  }
+  module.exports = _regeneratorRuntime, module.exports.__esModule = true, module.exports["default"] = module.exports;
+})(regeneratorRuntime$1);
+
+// TODO(Babel 8): Remove this file.
+
+var runtime = regeneratorRuntime$1.exports();
+var regenerator = runtime;
+
+// Copied from https://github.com/facebook/regenerator/blob/main/packages/runtime/runtime.js#L736=
+try {
+  regeneratorRuntime = runtime;
+} catch (accidentalStrictMode) {
+  if ((typeof globalThis === "undefined" ? "undefined" : _typeof$1(globalThis)) === "object") {
+    globalThis.regeneratorRuntime = runtime;
+  } else {
+    Function("r", "regeneratorRuntime = r")(runtime);
+  }
+}
 
 /**
  * Types of block
@@ -202,13 +603,17 @@ var en = {
 	"cameraselector.name": "Camera Selector",
 	"cameraselector.deviceName": "Device name",
 	"cameraselector.selectCamera": "Set camera to [LIST]",
-	"cameraselector.selectCameraWithLabel": "Set camera to [LABEL]"
+	"cameraselector.deviceLabelDefault": "Default",
+	"cameraselector.deviceLabelUser": "Front Camera",
+	"cameraselector.deviceLabelEnvironment": "Back Camera"
 };
 var ja = {
 	"cameraselector.name": "カメラセレクター",
 	"cameraselector.deviceName": "デバイス名",
 	"cameraselector.selectCamera": "カメラを[LIST]に切り替える",
-	"cameraselector.selectCameraWithLabel": "カメラを[LABEL]に切り替える"
+	"cameraselector.deviceLabelDefault": "Default",
+	"cameraselector.deviceLabelUser": "Front Camera",
+	"cameraselector.deviceLabelEnvironment": "Back Camera"
 };
 var translations = {
 	en: en,
@@ -217,1216 +622,29 @@ var translations = {
 	"cameraselector.name": "かめらせれくたー",
 	"cameraselector.deviceName": "でばいすめい",
 	"cameraselector.selectCamera": "かめらを[LIST]にきりかえる",
-	"cameraselector.selectCameraWithLabel": "かめらを[LABEL]にきりかえる"
+	"cameraselector.deviceLabelDefault": "Default",
+	"cameraselector.deviceLabelUser": "Front Camera",
+	"cameraselector.deviceLabelEnvironment": "Back Camera"
 },
 	"zh-cn": {
 	"cameraselector.name": "相机选择器",
 	"cameraselector.deviceName": "设备名称",
 	"cameraselector.selectCamera": "切换相机至[LIST]",
-	"cameraselector.selectCameraWithLabel": "切换相机至[LABEL]"
+	"cameraselector.deviceLabelDefault": "Default",
+	"cameraselector.deviceLabelUser": "Front Camera",
+	"cameraselector.deviceLabelEnvironment": "Back Camera"
 },
 	"zh-tw": {
 	"cameraselector.name": "相機選擇器",
 	"cameraselector.deviceName": "設備名稱",
 	"cameraselector.selectCamera": "切换相机至[LIST]",
-	"cameraselector.selectCameraWithLabel": "切换相机至[LABEL]"
+	"cameraselector.deviceLabelDefault": "Default",
+	"cameraselector.deviceLabelUser": "Front Camera",
+	"cameraselector.deviceLabelEnvironment": "Back Camera"
 }
 };
 
 var img = "data:image/png;base64,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";
-
-function _arrayWithHoles(arr) {
-  if (Array.isArray(arr)) return arr;
-}
-
-function _iterableToArrayLimit(arr, i) {
-  var _i = null == arr ? null : "undefined" != typeof Symbol && arr[Symbol.iterator] || arr["@@iterator"];
-  if (null != _i) {
-    var _s,
-      _e,
-      _x,
-      _r,
-      _arr = [],
-      _n = !0,
-      _d = !1;
-    try {
-      if (_x = (_i = _i.call(arr)).next, 0 === i) {
-        if (Object(_i) !== _i) return;
-        _n = !1;
-      } else for (; !(_n = (_s = _x.call(_i)).done) && (_arr.push(_s.value), _arr.length !== i); _n = !0);
-    } catch (err) {
-      _d = !0, _e = err;
-    } finally {
-      try {
-        if (!_n && null != _i["return"] && (_r = _i["return"](), Object(_r) !== _r)) return;
-      } finally {
-        if (_d) throw _e;
-      }
-    }
-    return _arr;
-  }
-}
-
-function _arrayLikeToArray(arr, len) {
-  if (len == null || len > arr.length) len = arr.length;
-  for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i];
-  return arr2;
-}
-
-function _unsupportedIterableToArray(o, minLen) {
-  if (!o) return;
-  if (typeof o === "string") return _arrayLikeToArray(o, minLen);
-  var n = Object.prototype.toString.call(o).slice(8, -1);
-  if (n === "Object" && o.constructor) n = o.constructor.name;
-  if (n === "Map" || n === "Set") return Array.from(o);
-  if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen);
-}
-
-function _nonIterableRest() {
-  throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
-}
-
-function _slicedToArray(arr, i) {
-  return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest();
-}
-
-var getUserMediaPromise = {exports: {}};
-
-(function (module) {
-  // loosely based on example code at https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getUserMedia
-  (function (root) {
-
-    /**
-     * Error thrown when any required feature is missing (Promises, navigator, getUserMedia)
-     * @constructor
-     */
-    function NotSupportedError() {
-      this.name = 'NotSupportedError';
-      this.message = 'getUserMedia is not implemented in this browser';
-    }
-    NotSupportedError.prototype = Error.prototype;
-
-    /**
-     * Fake Promise instance that behaves like a Promise except that it always rejects with a NotSupportedError.
-     * Used for situations where there is no global Promise constructor.
-     *
-     * The message will report that the getUserMedia API is not available.
-     * This is technically true because every browser that supports getUserMedia also supports promises.
-     **
-     * @see http://caniuse.com/#feat=stream
-     * @see http://caniuse.com/#feat=promises
-     * @constructor
-     */
-    function FakePromise() {
-      // make it chainable like a real promise
-      this.then = function () {
-        return this;
-      };
-
-      // but always reject with an error
-      var err = new NotSupportedError();
-      this.catch = function (cb) {
-        setTimeout(function () {
-          cb(err);
-        });
-      };
-    }
-    var isPromiseSupported = typeof Promise !== 'undefined';
-
-    // checks for root.navigator to enable server-side rendering of things that depend on this
-    // (will need to be updated on client, but at least doesn't throw this way)
-    var navigatorExists = typeof navigator !== "undefined";
-    // gump = mondern promise-based interface
-    // gum = old callback-based interface
-    var gump = navigatorExists && navigator.mediaDevices && navigator.mediaDevices.getUserMedia;
-    var gum = navigatorExists && (navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia);
-
-    /**
-     * Wrapper for navigator.mediaDevices.getUserMedia.
-     * Always returns a Promise or Promise-like object, even in environments without a global Promise constructor
-     *
-     * @stream https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getUserMedia
-     *
-     * @param {Object} constraints - must include one or both of audio/video along with optional details for video
-     * @param {Boolean} [constraints.audio] - include audio data in the stream
-     * @param {Boolean|Object} [constraints.video] - include video data in the stream. May be a boolean or an object with additional constraints, see
-     * @returns {Promise<MediaStream>} a promise that resolves to a MediaStream object
-       */
-    function getUserMedia(constraints) {
-      // ensure that Promises are supported and we have a navigator object
-      if (!isPromiseSupported) {
-        return new FakePromise();
-      }
-
-      // Try the more modern, promise-based MediaDevices API first
-      //https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getUserMedia
-      if (gump) {
-        return navigator.mediaDevices.getUserMedia(constraints);
-      }
-
-      // fall back to the older method second, wrap it in a promise.
-      return new Promise(function (resolve, reject) {
-        // if navigator doesn't exist, then we can't use the getUserMedia API. (And probably aren't even in a browser.)
-        // assuming it does, try getUserMedia and then all of the prefixed versions
-
-        if (!gum) {
-          return reject(new NotSupportedError());
-        }
-        gum.call(navigator, constraints, resolve, reject);
-      });
-    }
-    getUserMedia.NotSupportedError = NotSupportedError;
-
-    // eslint-disable-next-line no-implicit-coercion
-    getUserMedia.isSupported = !!(isPromiseSupported && (gump || gum));
-
-    // UMD, loosely based on https://github.com/umdjs/umd/blob/master/templates/returnExportsGlobal.js
-    if (module.exports) {
-      // Node. Does not work with strict CommonJS, but
-      // only CommonJS-like enviroments that support module.exports,
-      // like Node.
-      module.exports = getUserMedia;
-    } else {
-      // Browser globals
-      // polyfill the MediaDevices API if it does not exist.
-      root.navigator || (root.navigator = {});
-      root.navigator.mediaDevices || (root.navigator.mediaDevices = {});
-      root.navigator.mediaDevices.getUserMedia || (root.navigator.mediaDevices.getUserMedia = getUserMedia);
-    }
-  })(commonjsGlobal);
-})(getUserMediaPromise);
-
-// Single Setup For All Video Streams used by the GUI
-// While VideoProvider uses a private _singleSetup
-// property to ensure that each instance of a VideoProvider
-// use the same setup, this ensures that all instances
-// of VideoProviders use a single stream. This way, closing a camera modal
-// does not affect the video on the stage, and a program running and disabling
-// video on the stage will not affect the camera modal's video.
-var requestStack = [];
-var requestDisableVideo = function requestDisableVideo() {
-  requestStack.pop();
-  if (requestStack.length > 0) return false;
-  return true;
-};
-
-var web = {exports: {}};
-
-var minilog$2 = {exports: {}};
-
-function M() {
-  this._events = {};
-}
-M.prototype = {
-  on: function on(ev, cb) {
-    this._events || (this._events = {});
-    var e = this._events;
-    (e[ev] || (e[ev] = [])).push(cb);
-    return this;
-  },
-  removeListener: function removeListener(ev, cb) {
-    var e = this._events[ev] || [],
-      i;
-    for (i = e.length - 1; i >= 0 && e[i]; i--) {
-      if (e[i] === cb || e[i].cb === cb) {
-        e.splice(i, 1);
-      }
-    }
-  },
-  removeAllListeners: function removeAllListeners(ev) {
-    if (!ev) {
-      this._events = {};
-    } else {
-      this._events[ev] && (this._events[ev] = []);
-    }
-  },
-  listeners: function listeners(ev) {
-    return this._events ? this._events[ev] || [] : [];
-  },
-  emit: function emit(ev) {
-    this._events || (this._events = {});
-    var args = Array.prototype.slice.call(arguments, 1),
-      i,
-      e = this._events[ev] || [];
-    for (i = e.length - 1; i >= 0 && e[i]; i--) {
-      e[i].apply(this, args);
-    }
-    return this;
-  },
-  when: function when(ev, cb) {
-    return this.once(ev, cb, true);
-  },
-  once: function once(ev, cb, when) {
-    if (!cb) return this;
-    function c() {
-      if (!when) this.removeListener(ev, c);
-      if (cb.apply(this, arguments) && when) this.removeListener(ev, c);
-    }
-    c.cb = cb;
-    this.on(ev, c);
-    return this;
-  }
-};
-M.mixin = function (dest) {
-  var o = M.prototype,
-    k;
-  for (k in o) {
-    o.hasOwnProperty(k) && (dest.prototype[k] = o[k]);
-  }
-};
-var microee$1 = M;
-
-var microee = microee$1;
-
-// Implements a subset of Node's stream.Transform - in a cross-platform manner.
-function Transform$7() {}
-microee.mixin(Transform$7);
-
-// The write() signature is different from Node's
-// --> makes it much easier to work with objects in logs.
-// One of the lessons from v1 was that it's better to target
-// a good browser rather than the lowest common denominator
-// internally.
-// If you want to use external streams, pipe() to ./stringify.js first.
-Transform$7.prototype.write = function (name, level, args) {
-  this.emit('item', name, level, args);
-};
-Transform$7.prototype.end = function () {
-  this.emit('end');
-  this.removeAllListeners();
-};
-Transform$7.prototype.pipe = function (dest) {
-  var s = this;
-  // prevent double piping
-  s.emit('unpipe', dest);
-  // tell the dest that it's being piped to
-  dest.emit('pipe', s);
-  function onItem() {
-    dest.write.apply(dest, Array.prototype.slice.call(arguments));
-  }
-  function onEnd() {
-    !dest._isStdio && dest.end();
-  }
-  s.on('item', onItem);
-  s.on('end', onEnd);
-  s.when('unpipe', function (from) {
-    var match = from === dest || typeof from == 'undefined';
-    if (match) {
-      s.removeListener('item', onItem);
-      s.removeListener('end', onEnd);
-      dest.emit('unpipe');
-    }
-    return match;
-  });
-  return dest;
-};
-Transform$7.prototype.unpipe = function (from) {
-  this.emit('unpipe', from);
-  return this;
-};
-Transform$7.prototype.format = function (dest) {
-  throw new Error(['Warning: .format() is deprecated in Minilog v2! Use .pipe() instead. For example:', 'var Minilog = require(\'minilog\');', 'Minilog', '  .pipe(Minilog.backends.console.formatClean)', '  .pipe(Minilog.backends.console);'].join('\n'));
-};
-Transform$7.mixin = function (dest) {
-  var o = Transform$7.prototype,
-    k;
-  for (k in o) {
-    o.hasOwnProperty(k) && (dest.prototype[k] = o[k]);
-  }
-};
-var transform = Transform$7;
-
-// default filter
-var Transform$6 = transform;
-var levelMap = {
-  debug: 1,
-  info: 2,
-  warn: 3,
-  error: 4
-};
-function Filter() {
-  this.enabled = true;
-  this.defaultResult = true;
-  this.clear();
-}
-Transform$6.mixin(Filter);
-
-// allow all matching, with level >= given level
-Filter.prototype.allow = function (name, level) {
-  this._white.push({
-    n: name,
-    l: levelMap[level]
-  });
-  return this;
-};
-
-// deny all matching, with level <= given level
-Filter.prototype.deny = function (name, level) {
-  this._black.push({
-    n: name,
-    l: levelMap[level]
-  });
-  return this;
-};
-Filter.prototype.clear = function () {
-  this._white = [];
-  this._black = [];
-  return this;
-};
-function test(rule, name) {
-  // use .test for RegExps
-  return rule.n.test ? rule.n.test(name) : rule.n == name;
-}
-Filter.prototype.test = function (name, level) {
-  var i,
-    len = Math.max(this._white.length, this._black.length);
-  for (i = 0; i < len; i++) {
-    if (this._white[i] && test(this._white[i], name) && levelMap[level] >= this._white[i].l) {
-      return true;
-    }
-    if (this._black[i] && test(this._black[i], name) && levelMap[level] <= this._black[i].l) {
-      return false;
-    }
-  }
-  return this.defaultResult;
-};
-Filter.prototype.write = function (name, level, args) {
-  if (!this.enabled || this.test(name, level)) {
-    return this.emit('item', name, level, args);
-  }
-};
-var filter = Filter;
-
-(function (module, exports) {
-  var Transform = transform,
-    Filter = filter;
-  var log = new Transform(),
-    slice = Array.prototype.slice;
-  exports = module.exports = function create(name) {
-    var o = function o() {
-      log.write(name, undefined, slice.call(arguments));
-      return o;
-    };
-    o.debug = function () {
-      log.write(name, 'debug', slice.call(arguments));
-      return o;
-    };
-    o.info = function () {
-      log.write(name, 'info', slice.call(arguments));
-      return o;
-    };
-    o.warn = function () {
-      log.write(name, 'warn', slice.call(arguments));
-      return o;
-    };
-    o.error = function () {
-      log.write(name, 'error', slice.call(arguments));
-      return o;
-    };
-    o.log = o.debug; // for interface compliance with Node and browser consoles
-    o.suggest = exports.suggest;
-    o.format = log.format;
-    return o;
-  };
-
-  // filled in separately
-  exports.defaultBackend = exports.defaultFormatter = null;
-  exports.pipe = function (dest) {
-    return log.pipe(dest);
-  };
-  exports.end = exports.unpipe = exports.disable = function (from) {
-    return log.unpipe(from);
-  };
-  exports.Transform = Transform;
-  exports.Filter = Filter;
-  // this is the default filter that's applied when .enable() is called normally
-  // you can bypass it completely and set up your own pipes
-  exports.suggest = new Filter();
-  exports.enable = function () {
-    if (exports.defaultFormatter) {
-      return log.pipe(exports.suggest) // filter
-      .pipe(exports.defaultFormatter) // formatter
-      .pipe(exports.defaultBackend); // backend
-    }
-    return log.pipe(exports.suggest) // filter
-    .pipe(exports.defaultBackend); // formatter
-  };
-})(minilog$2, minilog$2.exports);
-
-var hex = {
-  black: '#000',
-  red: '#c23621',
-  green: '#25bc26',
-  yellow: '#bbbb00',
-  blue: '#492ee1',
-  magenta: '#d338d3',
-  cyan: '#33bbc8',
-  gray: '#808080',
-  purple: '#708'
-};
-function color$2(fg, isInverse) {
-  if (isInverse) {
-    return 'color: #fff; background: ' + hex[fg] + ';';
-  } else {
-    return 'color: ' + hex[fg] + ';';
-  }
-}
-var util = color$2;
-
-var Transform$5 = transform,
-  color$1 = util;
-var colors$1 = {
-    debug: ['cyan'],
-    info: ['purple'],
-    warn: ['yellow', true],
-    error: ['red', true]
-  },
-  logger$4 = new Transform$5();
-logger$4.write = function (name, level, args) {
-  var fn = console.log;
-  if (console[level] && console[level].apply) {
-    fn = console[level];
-    fn.apply(console, ['%c' + name + ' %c' + level, color$1('gray'), color$1.apply(color$1, colors$1[level])].concat(args));
-  }
-};
-
-// NOP, because piping the formatted logs can only cause trouble.
-logger$4.pipe = function () {};
-var color_1 = logger$4;
-
-var Transform$4 = transform,
-  color = util,
-  colors = {
-    debug: ['gray'],
-    info: ['purple'],
-    warn: ['yellow', true],
-    error: ['red', true]
-  },
-  logger$3 = new Transform$4();
-logger$3.write = function (name, level, args) {
-  var fn = console.log;
-  if (level != 'debug' && console[level]) {
-    fn = console[level];
-  }
-  var i = 0;
-  if (level != 'info') {
-    for (; i < args.length; i++) {
-      if (typeof args[i] != 'string') break;
-    }
-    fn.apply(console, ['%c' + name + ' ' + args.slice(0, i).join(' '), color.apply(color, colors[level])].concat(args.slice(i)));
-  } else {
-    fn.apply(console, ['%c' + name, color.apply(color, colors[level])].concat(args));
-  }
-};
-
-// NOP, because piping the formatted logs can only cause trouble.
-logger$3.pipe = function () {};
-var minilog$1 = logger$3;
-
-var Transform$3 = transform;
-var newlines = /\n+$/,
-  logger$2 = new Transform$3();
-logger$2.write = function (name, level, args) {
-  var i = args.length - 1;
-  if (typeof console === 'undefined' || !console.log) {
-    return;
-  }
-  if (console.log.apply) {
-    return console.log.apply(console, [name, level].concat(args));
-  } else if (JSON && JSON.stringify) {
-    // console.log.apply is undefined in IE8 and IE9
-    // for IE8/9: make console.log at least a bit less awful
-    if (args[i] && typeof args[i] == 'string') {
-      args[i] = args[i].replace(newlines, '');
-    }
-    try {
-      for (i = 0; i < args.length; i++) {
-        args[i] = JSON.stringify(args[i]);
-      }
-    } catch (e) {}
-    console.log(args.join(' '));
-  }
-};
-logger$2.formatters = ['color', 'minilog'];
-logger$2.color = color_1;
-logger$2.minilog = minilog$1;
-var console_1 = logger$2;
-
-var Transform$2 = transform,
-  cache$1 = [];
-var logger$1 = new Transform$2();
-logger$1.write = function (name, level, args) {
-  cache$1.push([name, level, args]);
-};
-
-// utility functions
-logger$1.get = function () {
-  return cache$1;
-};
-logger$1.empty = function () {
-  cache$1 = [];
-};
-var array = logger$1;
-
-var Transform$1 = transform,
-  cache = false;
-var logger = new Transform$1();
-logger.write = function (name, level, args) {
-  if (typeof window == 'undefined' || typeof JSON == 'undefined' || !JSON.stringify || !JSON.parse) return;
-  try {
-    if (!cache) {
-      cache = window.localStorage.minilog ? JSON.parse(window.localStorage.minilog) : [];
-    }
-    cache.push([new Date().toString(), name, level, args]);
-    window.localStorage.minilog = JSON.stringify(cache);
-  } catch (e) {}
-};
-var localstorage = logger;
-
-var Transform = transform;
-var cid = new Date().valueOf().toString(36);
-function AjaxLogger(options) {
-  this.url = options.url || '';
-  this.cache = [];
-  this.timer = null;
-  this.interval = options.interval || 30 * 1000;
-  this.enabled = true;
-  this.jQuery = window.jQuery;
-  this.extras = {};
-}
-Transform.mixin(AjaxLogger);
-AjaxLogger.prototype.write = function (name, level, args) {
-  if (!this.timer) {
-    this.init();
-  }
-  this.cache.push([name, level].concat(args));
-};
-AjaxLogger.prototype.init = function () {
-  if (!this.enabled || !this.jQuery) return;
-  var self = this;
-  this.timer = setTimeout(function () {
-    var i,
-      logs = [],
-      ajaxData,
-      url = self.url;
-    if (self.cache.length == 0) return self.init();
-    // Test each log line and only log the ones that are valid (e.g. don't have circular references).
-    // Slight performance hit but benefit is we log all valid lines.
-    for (i = 0; i < self.cache.length; i++) {
-      try {
-        JSON.stringify(self.cache[i]);
-        logs.push(self.cache[i]);
-      } catch (e) {}
-    }
-    if (self.jQuery.isEmptyObject(self.extras)) {
-      ajaxData = JSON.stringify({
-        logs: logs
-      });
-      url = self.url + '?client_id=' + cid;
-    } else {
-      ajaxData = JSON.stringify(self.jQuery.extend({
-        logs: logs
-      }, self.extras));
-    }
-    self.jQuery.ajax(url, {
-      type: 'POST',
-      cache: false,
-      processData: false,
-      data: ajaxData,
-      contentType: 'application/json',
-      timeout: 10000
-    }).success(function (data, status, jqxhr) {
-      if (data.interval) {
-        self.interval = Math.max(1000, data.interval);
-      }
-    }).error(function () {
-      self.interval = 30000;
-    }).always(function () {
-      self.init();
-    });
-    self.cache = [];
-  }, this.interval);
-};
-AjaxLogger.prototype.end = function () {};
-
-// wait until jQuery is defined. Useful if you don't control the load order.
-AjaxLogger.jQueryWait = function (onDone) {
-  if (typeof window !== 'undefined' && (window.jQuery || window.$)) {
-    return onDone(window.jQuery || window.$);
-  } else if (typeof window !== 'undefined') {
-    setTimeout(function () {
-      AjaxLogger.jQueryWait(onDone);
-    }, 200);
-  }
-};
-var jquery_simple = AjaxLogger;
-
-(function (module, exports) {
-  var Minilog = minilog$2.exports;
-  var oldEnable = Minilog.enable,
-    oldDisable = Minilog.disable,
-    isChrome = typeof navigator != 'undefined' && /chrome/i.test(navigator.userAgent),
-    console = console_1;
-
-  // Use a more capable logging backend if on Chrome
-  Minilog.defaultBackend = isChrome ? console.minilog : console;
-
-  // apply enable inputs from localStorage and from the URL
-  if (typeof window != 'undefined') {
-    try {
-      Minilog.enable(JSON.parse(window.localStorage['minilogSettings']));
-    } catch (e) {}
-    if (window.location && window.location.search) {
-      var match = RegExp('[?&]minilog=([^&]*)').exec(window.location.search);
-      match && Minilog.enable(decodeURIComponent(match[1]));
-    }
-  }
-
-  // Make enable also add to localStorage
-  Minilog.enable = function () {
-    oldEnable.call(Minilog, true);
-    try {
-      window.localStorage['minilogSettings'] = JSON.stringify(true);
-    } catch (e) {}
-    return this;
-  };
-  Minilog.disable = function () {
-    oldDisable.call(Minilog);
-    try {
-      delete window.localStorage.minilogSettings;
-    } catch (e) {}
-    return this;
-  };
-  exports = module.exports = Minilog;
-  exports.backends = {
-    array: array,
-    browser: Minilog.defaultBackend,
-    localStorage: localstorage,
-    jQuery: jquery_simple
-  };
-})(web, web.exports);
-var minilog = web.exports;
-
-minilog.enable();
-var log = minilog('gui');
-
-/**
- * Video Manager for video extensions.
- */
-var VideoProvider = /*#__PURE__*/function () {
-  function VideoProvider() {
-    var _this = this;
-    _classCallCheck(this, VideoProvider);
-    /**
-     * Default value for mirrored frames.
-     * @type boolean
-     */
-    this.mirror = true;
-
-    /**
-     * Cache frames for this many ms.
-     * @type number
-     */
-    this._frameCacheTimeout = 16;
-
-    /**
-     * DOM Video element
-     * @private
-     */
-    this._video = null;
-
-    /**
-     * Usermedia stream track
-     * @private
-     */
-    this._track = null;
-
-    /**
-     * Stores some canvas/frame data per resolution/mirror states
-     */
-    this._workspace = [];
-
-    /**
-     * Usermedia stream
-     * @private
-     */
-    this._stream = null;
-
-    /**
-     * The video descriptor used in getUserMedia
-     * @type {MediaStreamConstraints['video']}
-     */
-    this._videoDescriptor = {};
-
-    /**
-     * A list of available video devices.
-     * This array remains empty until camera permission is granted.
-     * @type {Array<MediaDeviceInfo>}
-     */
-    this._videoDevices = [];
-    navigator.permissions.query({
-      name: "camera"
-    }).then(function (p) {
-      return p.addEventListener('change', function () {
-        return _this._updateVideoDevices();
-      });
-    });
-    navigator.mediaDevices.addEventListener("devicechange", function () {
-      return _this._updateVideoDevices();
-    });
-    this._updateVideoDevices();
-  }
-  _createClass(VideoProvider, [{
-    key: "video",
-    get:
-    /**
-     * Get the HTML video element containing the stream
-     */
-    function get() {
-      return this._video;
-    }
-
-    /**
-     * Get the list of available video devices.
-     * This array remains empty until camera permission is granted.
-     * @type {Array<MediaDeviceInfo>}
-     */
-  }, {
-    key: "videoDevices",
-    get: function get() {
-      return this._videoDevices;
-    }
-
-    /**
-     * Request video be enabled.  Sets up video, creates video skin and enables preview.
-     *
-     * @return {Promise.<Video>} resolves a promise to this video provider when video is ready.
-     */
-  }, {
-    key: "enableVideo",
-    value: function enableVideo() {
-      this.enabled = true;
-      return this._setupVideo();
-    }
-
-    /**
-     * Disable video stream (turn video off)
-     *
-     * @return {Promise.<Video>} resolves a promise to this video provider when video is disabled.
-     */
-  }, {
-    key: "disableVideo",
-    value: function disableVideo() {
-      var _this2 = this;
-      this.enabled = false;
-      // If we have begun a setup process, call _teardown after it completes
-      if (this._singleSetup && typeof this._singleSetup.then === "function") {
-        return this._singleSetup.then(function () {
-          return _this2._teardown();
-        }).catch(function (err) {
-          return _this2.onError(err);
-        });
-      }
-      return Promise.resolve();
-    }
-
-    /**
-     * async part of disableVideo
-     * @private
-     */
-  }, {
-    key: "_teardown",
-    value: function _teardown() {
-      // we might be asked to re-enable before _teardown is called, just ignore it.
-      if (this.enabled === false) {
-        var disableTrack = requestDisableVideo();
-        this._singleSetup = null;
-        // by clearing refs to video and track, we should lose our hold over the camera
-        this._video = null;
-        if (this._track && disableTrack) {
-          this._track.stop();
-        }
-        this._track = null;
-      }
-    }
-
-    /**
-     * Return frame data from the video feed in a specified dimensions, format, and mirroring.
-     *
-     * @param {object} frameInfo A descriptor of the frame you would like to receive.
-     * @param {Array.<number>} frameInfo.dimensions [width, height] array of numbers.  Defaults to [480,360]
-     * @param {boolean} frameInfo.mirror If you specificly want a mirror/non-mirror frame, defaults to true
-     * @param {string} frameInfo.format Requested video format, available formats are 'image-data' and 'canvas'.
-     * @param {number} frameInfo.cacheTimeout Will reuse previous image data if the time since capture is less than
-     *                                        the cacheTimeout.  Defaults to 16ms.
-     *
-     * @return {ArrayBuffer|Canvas|string|null} Frame data in requested format, null when errors.
-     */
-  }, {
-    key: "getFrame",
-    value: function getFrame(_ref) {
-      var _ref$dimensions = _ref.dimensions,
-        dimensions = _ref$dimensions === void 0 ? VideoProvider.DIMENSIONS : _ref$dimensions,
-        _ref$mirror = _ref.mirror,
-        mirror = _ref$mirror === void 0 ? this.mirror : _ref$mirror,
-        _ref$format = _ref.format,
-        format = _ref$format === void 0 ? VideoProvider.FORMAT_IMAGE_DATA : _ref$format,
-        _ref$cacheTimeout = _ref.cacheTimeout,
-        cacheTimeout = _ref$cacheTimeout === void 0 ? this._frameCacheTimeout : _ref$cacheTimeout;
-      if (!this.videoReady) {
-        return null;
-      }
-      var _dimensions = _slicedToArray(dimensions, 2),
-        width = _dimensions[0],
-        height = _dimensions[1];
-      var workspace = this._getWorkspace({
-        dimensions: dimensions,
-        mirror: Boolean(mirror)
-      });
-      var _this$_video = this._video,
-        videoWidth = _this$_video.videoWidth,
-        videoHeight = _this$_video.videoHeight;
-      var canvas = workspace.canvas,
-        context = workspace.context,
-        lastUpdate = workspace.lastUpdate,
-        cacheData = workspace.cacheData;
-      var now = Date.now();
-
-      // if the canvas hasn't been updated...
-      if (lastUpdate + cacheTimeout < now) {
-        if (mirror) {
-          context.scale(-1, 1);
-          context.translate(width * -1, 0);
-        }
-        context.drawImage(this._video,
-        // source x, y, width, height
-        0, 0, videoWidth, videoHeight,
-        // dest x, y, width, height
-        0, 0, width, height);
-
-        // context.resetTransform() doesn't work on Edge but the following should
-        context.setTransform(1, 0, 0, 1, 0, 0);
-        workspace.lastUpdate = now;
-      }
-
-      // each data type has it's own data cache, but the canvas is the same
-      if (!cacheData[format]) {
-        cacheData[format] = {
-          lastUpdate: 0
-        };
-      }
-      var formatCache = cacheData[format];
-      if (formatCache.lastUpdate + cacheTimeout < now) {
-        if (format === VideoProvider.FORMAT_IMAGE_DATA) {
-          formatCache.lastData = context.getImageData(0, 0, width, height);
-        } else if (format === VideoProvider.FORMAT_CANVAS) {
-          // this will never change
-          formatCache.lastUpdate = Infinity;
-          formatCache.lastData = canvas;
-        } else {
-          log.error("video io error - unimplemented format ".concat(format));
-          // cache the null result forever, don't log about it again..
-          formatCache.lastUpdate = Infinity;
-          formatCache.lastData = null;
-        }
-
-        // rather than set to now, this data is as stale as it's canvas is
-        formatCache.lastUpdate = Math.max(workspace.lastUpdate, formatCache.lastUpdate);
-      }
-      return formatCache.lastData;
-    }
-
-    /**
-     * Method called when an error happens.  Default implementation is just to log error.
-     *
-     * @abstract
-     * @param {Error} error An error object from getUserMedia or other source of error.
-     */
-  }, {
-    key: "onError",
-    value: function onError(error) {
-      log.error('Unhandled video io device error', error);
-    }
-
-    /**
-     * Create a video stream.
-     * @private
-     * @return {Promise} When video has been received, rejected if video is not received
-     */
-  }, {
-    key: "_setupVideo",
-    value: function _setupVideo() {
-      var _this3 = this;
-      // We cache the result of this setup so that we can only ever have a single
-      // video/getUserMedia request happen at a time.
-      if (this._singleSetup) {
-        return this._singleSetup;
-      }
-      this._singleSetup = navigator.mediaDevices.getUserMedia({
-        audio: false,
-        video: Object.assign({
-          width: {
-            min: 480,
-            ideal: 640
-          },
-          height: {
-            min: 360,
-            ideal: 480
-          }
-        }, this._videoDescriptor)
-      }).then(function (stream) {
-        if (_this3._video == null) {
-          _this3._video = document.createElement('video');
-        } else {
-          if (!_this3.video.paused) {
-            _this3.video.pause();
-          }
-        }
-        if (_this3._track && _this3._track.enabled) {
-          _this3._track.stop();
-        }
-        // Use the new srcObject API, falling back to createObjectURL
-        try {
-          _this3._video.srcObject = stream;
-        } catch (error) {
-          _this3._video.src = window.URL.createObjectURL(stream);
-        }
-        // Hint to the stream that it should load. A standard way to do this
-        // is add the video tag to the DOM. Since this extension wants to
-        // hide the video tag and instead render a sample of the stream into
-        // the webgl rendered Scratch canvas, another hint like this one is
-        // needed.
-        _this3._video.play(); // Needed for Safari/Firefox, Chrome auto-plays.
-        _this3._track = stream.getTracks()[0];
-        _this3._stream = stream;
-        return _this3;
-      }).catch(function (error) {
-        _this3._singleSetup = null;
-        _this3.onError(error);
-      });
-      return this._singleSetup;
-    }
-  }, {
-    key: "videoReady",
-    get: function get() {
-      if (!this.enabled) {
-        return false;
-      }
-      if (!this._video) {
-        return false;
-      }
-      if (!this._track) {
-        return false;
-      }
-      var _this$_video2 = this._video,
-        videoWidth = _this$_video2.videoWidth,
-        videoHeight = _this$_video2.videoHeight;
-      if (typeof videoWidth !== 'number' || typeof videoHeight !== 'number') {
-        return false;
-      }
-      if (videoWidth === 0 || videoHeight === 0) {
-        return false;
-      }
-      return true;
-    }
-
-    /**
-     * get an internal workspace for canvas/context/caches
-     * this uses some document stuff to create a canvas and what not, probably needs abstraction
-     * into the renderer layer?
-     * @private
-     * @return {object} A workspace for canvas/data storage.  Internal format not documented intentionally
-     */
-  }, {
-    key: "_getWorkspace",
-    value: function _getWorkspace(_ref2) {
-      var dimensions = _ref2.dimensions,
-        mirror = _ref2.mirror;
-      var workspace = this._workspace.find(function (space) {
-        return space.dimensions.join('-') === dimensions.join('-') && space.mirror === mirror;
-      });
-      if (!workspace) {
-        workspace = {
-          dimensions: dimensions,
-          mirror: mirror,
-          canvas: document.createElement('canvas'),
-          lastUpdate: 0,
-          cacheData: {}
-        };
-        workspace.canvas.width = dimensions[0];
-        workspace.canvas.height = dimensions[1];
-        workspace.context = workspace.canvas.getContext('2d');
-        this._workspace.push(workspace);
-      }
-      return workspace;
-    }
-
-    /**
-     * Set a new video descriptor and update the media stream if video is enabled.
-     *
-     * @param {MediaStreamConstraints['video']} videoDescriptor The new video descriptor to be set.
-     * @returns {Promise<void>} A promise that resolves when the video source has been successfully updated,
-     *                           or rejects with an error if the update fails.
-     */
-  }, {
-    key: "setVideoDescriptor",
-    value: function setVideoDescriptor(videoDescriptor) {
-      var _this4 = this;
-      if (JSON.stringify(videoDescriptor) === JSON.stringify(this._videoDescriptor)) {
-        return Promise.resolve();
-      }
-      var oldVideoDescriptor = this._videoDescriptor;
-      this._videoDescriptor = videoDescriptor;
-      var dev = this._findDesiredVideoDevice();
-      if (dev != null) {
-        this._videoDescriptor = {
-          deviceId: dev.deviceId
-        };
-        if (JSON.stringify(oldVideoDescriptor) === JSON.stringify(this._videoDescriptor)) {
-          return Promise.resolve();
-        }
-      }
-      var currentVideoReady = this.videoReady;
-      return this.disableVideo().then(function () {
-        _this4._singleSetup = null;
-        if (currentVideoReady) {
-          return _this4.enableVideo();
-        }
-      });
-    }
-
-    /**
-     *
-     */
-  }, {
-    key: "_findDesiredVideoDevice",
-    value: function _findDesiredVideoDevice() {
-      var videoDescriptor = this._videoDescriptor;
-      if (typeof videoDescriptor.deviceId !== "undefined" && videoDescriptor.deviceId !== "") {
-        return this._videoDevices.find(function (dev) {
-          return dev.deviceId === videoDescriptor.deviceId;
-        });
-      }
-      // label指定の場合は完全一致と先頭一致と部分一致をチェックする
-      if (typeof videoDescriptor.label !== "undefined" && videoDescriptor.label !== "") {
-        var dev = this._videoDevices.find(function (dev) {
-          return dev.label === videoDescriptor.label;
-        }) || this._videoDevices.find(function (dev) {
-          return dev.label.startsWith(videoDescriptor.label);
-        }) || this._videoDevices.find(function (dev) {
-          return dev.label.includes(videoDescriptor.label);
-        }) || this._videoDevices.find(function (dev) {
-          return dev.label.toLocaleLowerCase().includes(videoDescriptor.label.toLocaleLowerCase());
-        });
-        if (dev != null) {
-          return dev;
-        }
-      }
-      return null;
-    }
-
-    /**
-     * Updates the list of available video devices.
-     * @private
-     */
-  }, {
-    key: "_updateVideoDevices",
-    value: function _updateVideoDevices() {
-      var _this5 = this;
-      console.log("_updateVideoDevices");
-      navigator.mediaDevices.enumerateDevices().catch(function () {
-        return [];
-      }).then(function (devices) {
-        _this5._videoDevices = devices.filter(function (d) {
-          return d.deviceId && d.kind === 'videoinput';
-        }).sort(function (a, b) {
-          return b.label < a.label;
-        });
-      }).then(function (devices) {
-        // 希望デバイスの指定がある場合はカメラを切り替える
-        var dev = _this5._findDesiredVideoDevice();
-        if (dev != null) {
-          _this5.setVideoDescriptor(dev);
-        }
-        return devices;
-      });
-    }
-  }], [{
-    key: "FORMAT_IMAGE_DATA",
-    get: function get() {
-      return 'image-data';
-    }
-  }, {
-    key: "FORMAT_CANVAS",
-    get: function get() {
-      return 'canvas';
-    }
-
-    /**
-     * Dimensions the video stream is analyzed at after its rendered to the
-     * sample canvas.
-     * @type {Array.<number>}
-     */
-  }, {
-    key: "DIMENSIONS",
-    get: function get() {
-      return [480, 360];
-    }
-
-    /**
-     * Order preview drawable is inserted at in the renderer.
-     * @type {number}
-     */
-  }, {
-    key: "ORDER",
-    get: function get() {
-      return 1;
-    }
-  }]);
-  return VideoProvider;
-}();
-/**
- * Replaces the current video provider in the runtime with a SelectableVideoProvider.
- * Preserves the video state and settings during the switch.
- *
- * @param {Object} runtime The runtime to inject the video provider into.
- * @returns {SelectableVideoProvider} The new or existing video provider.
- */
-var setupSelectableVideoProvider = function setupSelectableVideoProvider(runtime) {
-  if (isSelectableVideoProvider(runtime.ioDevices.video.provider)) {
-    return runtime.ioDevices.video.provider;
-  }
-  var newProvider = new SelectableVideoProvider();
-  var oldProvider = runtime.ioDevices.video.provider;
-  var oldVideoReady = oldProvider != null && oldProvider.videoReady;
-  if (oldProvider != null) {
-    newProvider._workspace = oldProvider._workspace;
-    newProvider._track = oldProvider._track;
-    newProvider._video = oldProvider._video;
-    newProvider.mirror = oldProvider.mirror;
-    if (oldProvider.videoReady) {
-      oldProvider.disableVideo();
-    }
-  }
-  // New VideoProvider from here
-  runtime.ioDevices.video.setProvider(newProvider);
-  if (oldVideoReady) {
-    runtime.ioDevices.video.enableVideo();
-  }
-  return newProvider;
-};
-
-/**
- * Checks if the provided videoProvider meets the criteria of a SelectableVideoProvider.
- * @param {Object} videoProvider - The video provider object to check.
- * @returns {boolean} - Returns true if videoProvider meets the criteria of a SelectableVideoProvider, false otherwise.
- */
-var isSelectableVideoProvider = function isSelectableVideoProvider(videoProvider) {
-  return videoProvider && typeof videoProvider.videoDevices !== "undefined" && typeof videoProvider.setVideoDescriptor !== "undefined";
-};
-var SelectableVideoProvider = VideoProvider;
-
-var DEFAULT_VIDEO_LABEL = "\u200BDefault\u200B";
 
 /**
  * Formatter which is used for translation.
@@ -1472,11 +690,27 @@ var ExtensionBlocks = /*#__PURE__*/function () {
      */
     this.runtime = runtime;
     window.runtime = runtime; // DEBUG
+    window.cameraselector = this; // DEBUG
 
     if (runtime.formatMessage) {
       // Replace 'formatMessage' to a formatter which is used in the runtime.
       formatMessage = runtime.formatMessage;
     }
+
+    /**
+     * 利用可能なビデオデバイスリスト
+     * @type {InputDeviceInfo[]}
+     */
+    this._videoDevices = [];
+
+    /**
+     * 使用したいビデオデバイスの条件
+     * @type {MediaTrackConstraints | {label?: string}}
+     */
+    this._desiredVideoTrackConstraints = {};
+
+    // Video 関連の監視を開始する
+    this._registerListeners();
   }
 
   /**
@@ -1503,31 +737,11 @@ var ExtensionBlocks = /*#__PURE__*/function () {
           arguments: {
             LIST: {
               type: argumentType.STRING,
-              defaultValue: DEFAULT_VIDEO_LABEL,
+              defaultValue: this._DEVICE_LABEL_DEFAULT,
               menu: 'videoDevicesMenu'
             }
           }
-        }
-        // ラベル検索は混乱するので隠すことにした
-        // {
-        //   opcode: 'selectCameraWithLabel',
-        //   blockType: BlockType.COMMAND,
-        //   text: formatMessage({
-        //     id: 'cameraselector.selectCameraWithLabel',
-        //     default: translations.en['cameraselector.selectCameraWithLabel'],
-        //     description: 'select the video device with label'
-        //   }),
-        //   arguments: {
-        //     LABEL: {
-        //       type: ArgumentType.STRING,
-        //       defaultValue: formatMessage({
-        //         id: "cameraselector.deviceName",
-        //         default: "Device Name"
-        //       }),
-        //     },
-        //   },
-        // },
-        ],
+        }],
         menus: {
           videoDevicesMenu: {
             acceptReporters: true,
@@ -1539,46 +753,40 @@ var ExtensionBlocks = /*#__PURE__*/function () {
   }, {
     key: "selectCamera",
     value: function selectCamera(args) {
-      var _this = this;
       var label = args.LIST || args.LABEL || '';
-      var descriptor = {};
-      if (label && label !== DEFAULT_VIDEO_LABEL) {
-        descriptor.label = label;
+      var constraints = {};
+      if (label && label !== this._DEVICE_LABEL_DEFAULT) {
+        constraints.label = label;
       }
-      this._getSelectableVideoProvider().setVideoDescriptor(descriptor).then(function () {
+      // label を元にデバイスを探す
+      var dev = this._findVideoDevice(constraints);
+      if (dev && dev.deviceId) {
+        constraints.deviceId = dev.deviceId;
+      }
+      this._desiredVideoTrackConstraints = constraints;
+      if (this.runtime.ioDevices.video.videoReady) {
+        // 既存のビデオストリームを差し替える
+        return this._openVideoStream(this._video);
+      } else {
         // 自動的にカメラをONにする
-        return _this.runtime.ioDevices.video.enableVideo().catch(function () {});
-      });
-      // 対応するデバイスが見つからない場合に OverconstrainedError が発生する事がありますが、その対応が実装できていない事に注意が必要です。
-      // 例えば MacbookPro は背面カメラをサポートしていないので {facingMode:{exact:"environment"}} を指定するとエラーが発生し現状では他のカメラに切り替えても復帰できなくなります。
-      // if (label === "USER") {
-      //   this._getSelectableVideoProvider().setVideoDescriptor({ facingMode: "user" });
-      // } else if (label === "ENVIRONMENT") {
-      //   this._getSelectableVideoProvider().setVideoDescriptor({ facingMode: { exact: "environment" } })
-      // } else {
-      // }
+        return this.runtime.ioDevices.video.enableVideo();
+      }
     }
-
-    // ラベル検索は混乱するので隠すことにした
-    // selectCameraWithLabel(args) {
-    //   this.selectCamera(args)
-    // }
   }, {
     key: "getVideoDevicesMenu",
     value: function getVideoDevicesMenu() {
       var defaultValues = [{
-        text: 'Default',
-        value: DEFAULT_VIDEO_LABEL
-      } // 既存のカメラ名に Default を含むものが選ばれないようゼロ幅スペース付きの値をデフォルト値として使用する
-      ];
+        text: this._DEVICE_LABEL_DEFAULT,
+        value: this._DEVICE_LABEL_DEFAULT
+      }];
       // Constraints に対応するデバイスが見つからなかった場合に OverconstrainedError が発生する際の問題が未解決なので封印
       // if(navigator.mediaDevices.getSupportedConstraints().facingMode) {
       //   defaultValues.push(
-      //     { text: "前面カメラ", value: "USER" },
-      //     { text: "背面カメラ", value: "ENVIRONMENT" }
+      //     { text: this._DEVICE_LABEL_USER, value: this._DEVICE_LABEL_USER},
+      //     { text: this._DEVICE_LABEL_ENVIRONMENT, value: this._DEVICE_LABEL_ENVIRONMENT}
       //   )
       // }
-      var deviceValues = this._getSelectableVideoProvider().videoDevices.map(function (dev) {
+      var deviceValues = this._videoDevices.map(function (dev) {
         return {
           text: dev.label,
           value: dev.label
@@ -1588,13 +796,281 @@ var ExtensionBlocks = /*#__PURE__*/function () {
       });
       return defaultValues.concat(deviceValues);
     }
+
+    /**
+     * @private
+     * @param {MediaTrackConstraints | {label?: string}} videoTrackConstraints
+     * @returns {MediaDeviceInfo}
+     */
   }, {
-    key: "_getSelectableVideoProvider",
-    value: function _getSelectableVideoProvider() {
-      if (isSelectableVideoProvider(this.runtime.ioDevices.video.provider)) {
-        return this.runtime.ioDevices.video.provider;
+    key: "_findVideoDevice",
+    value: function _findVideoDevice(videoTrackConstraints) {
+      if (typeof videoTrackConstraints.deviceId !== "undefined" && videoTrackConstraints.deviceId !== "") {
+        return this._videoDevices.find(function (dev) {
+          return dev.deviceId === videoTrackConstraints.deviceId;
+        });
       }
-      return setupSelectableVideoProvider(this.runtime);
+      // label指定の場合は完全一致と先頭一致と部分一致をチェックする
+      if (typeof videoTrackConstraints.label !== "undefined" && videoTrackConstraints.label !== "") {
+        var dev = this._videoDevices.find(function (dev) {
+          return dev.label === videoTrackConstraints.label;
+        }) || this._videoDevices.find(function (dev) {
+          return dev.label.startsWith(videoTrackConstraints.label);
+        }) || this._videoDevices.find(function (dev) {
+          return dev.label.includes(videoTrackConstraints.label);
+        }) || this._videoDevices.find(function (dev) {
+          return dev.label.toLocaleLowerCase().includes(videoTrackConstraints.label.toLocaleLowerCase());
+        });
+        if (dev != null) {
+          return dev;
+        }
+      }
+      return null;
+    }
+
+    /**
+     * @private
+     */
+  }, {
+    key: "_registerListeners",
+    value: function _registerListeners() {
+      var _this = this;
+      // mediaDevices の変化の監視
+      navigator.permissions.query({
+        name: "camera"
+      }).then(function (p) {
+        return p.addEventListener('change', function () {
+          return _this._onChangeMediaDevice();
+        });
+      });
+      navigator.mediaDevices.addEventListener("devicechange", function () {
+        return _this._onChangeMediaDevice();
+      });
+      this._onChangeMediaDevice();
+      // VideoProvider の video プロパティの監視
+      /** @private @type {HTMLVideoElement | null} */
+      this._oldVideo = null;
+      /** @private @type {NodeJS.Timeout} */
+      this._videoChangeWatchdogTimeout = setInterval(function () {
+        return _this._videoChangeWatchdog();
+      }, 200);
+    }
+
+    /**
+     * Updates the list of available video devices.
+     * @private
+     */
+  }, {
+    key: "_onChangeMediaDevice",
+    value: function _onChangeMediaDevice() {
+      var _this2 = this;
+      navigator.mediaDevices.enumerateDevices().catch(function () {
+        return [];
+      }).then(function (devices) {
+        _this2._videoDevices = devices.filter(function (d) {
+          return d.kind === 'videoinput';
+        });
+      }).then(function () {
+        // 指定デバイスが見つかったならカメラを切り替える
+        var dev = _this2._findVideoDevice(_this2._desiredVideoTrackConstraints);
+        if (dev != null && dev.deviceId) {
+          _this2._desiredVideoTrackConstraints = {
+            deviceId: dev.deviceId
+          };
+          _this2._openVideoStream(_this2._video);
+        }
+      });
+    }
+
+    /**
+     * runtime.ioDevices.video.provider の _video の変化を監視する
+     * @private
+     */
+  }, {
+    key: "_videoChangeWatchdog",
+    value: function _videoChangeWatchdog() {
+      var oldVideo = this._oldVideo; // instance value
+      var newVideo = this._video; // getter
+      if (oldVideo !== newVideo) {
+        this._oldVideo = newVideo;
+        this._onChangeVideoElement(oldVideo, newVideo);
+      }
+    }
+
+    /**
+     * video エレメントに変化があった際にカメラ選択機能を追従させる
+     * @param {HTMLVideoElement | null} oldVideo
+     * @param {HTMLVideoElement | null} newVideo
+     */
+  }, {
+    key: "_onChangeVideoElement",
+    value: function _onChangeVideoElement(oldVideo, newVideo) {
+      console.log("_onChangeVideoElement", {
+        oldVideo: oldVideo,
+        newVideo: newVideo
+      });
+      if (oldVideo != null) {
+        this._closeVideoStream(oldVideo);
+      }
+      if (newVideo != null) {
+        this._openVideoStream(newVideo);
+      }
+    }
+
+    /**
+     * @private
+     * @param {HTMLVideoElement} video
+     */
+  }, {
+    key: "_closeVideoStream",
+    value: function _closeVideoStream(video) {
+      if (video) {
+        if (video.srcObject) {
+          video.srcObject.getTracks().forEach(function (track) {
+            return track.stop();
+          });
+        }
+        video.src = '';
+      }
+    }
+
+    /**
+     *
+     * @private
+     * @param {HTMLVideoElement} video
+     * @returns {Promise<MediaStream | null>}
+     */
+  }, {
+    key: "_openVideoStream",
+    value: function _openVideoStream(video) {
+      var _this3 = this;
+      if (video == null) {
+        return Promise.resolve(null);
+      }
+      var dev = this._findVideoDevice(this._desiredVideoTrackConstraints);
+      if (dev && dev.deviceId) {
+        if (dev.deviceId === this._deviceId) {
+          // 現在使用中のビデオデバイスIDと同じなので何もしない
+          return Promise.resolve(video.srcObject);
+        }
+        // デバイスIDがあるなら他の条件は不要
+        this._desiredVideoTrackConstraints = {
+          deviceId: dev.deviceId
+        };
+      }
+      // 新しい stream を取得する前に既存の stream があれば閉じておく
+      this._closeVideoStream(video);
+      // video エレメントではなく VideoProvider._track が存在する場合はそれも閉じておく（vide.srcObject と一致しない場合がある）
+      if (this._videoProvider && this._videoProvider._track) {
+        this._videoProvider._track.stop();
+      }
+      return getUserMedia({
+        audio: false,
+        video: Object.assign({
+          width: {
+            min: 480,
+            ideal: 640
+          },
+          height: {
+            min: 360,
+            ideal: 480
+          }
+        }, this._desiredVideoTrackConstraints)
+      }).then( /*#__PURE__*/function () {
+        var _ref = _asyncToGenerator( /*#__PURE__*/regenerator.mark(function _callee(stream) {
+          return regenerator.wrap(function _callee$(_context) {
+            while (1) switch (_context.prev = _context.next) {
+              case 0:
+                try {
+                  video.srcObject = stream;
+                } catch (error) {
+                  video.src = window.URL.createObjectURL(stream);
+                }
+                // Needed for Safari/Firefox, Chrome auto-plays.
+                _context.next = 3;
+                return video.play();
+              case 3:
+                // runtime の VideoProvide が保持する track も差し替える
+                _this3._videoProvider._track = stream.getTracks()[0];
+                return _context.abrupt("return", stream);
+              case 5:
+              case "end":
+                return _context.stop();
+            }
+          }, _callee);
+        }));
+        return function (_x) {
+          return _ref.apply(this, arguments);
+        };
+      }());
+    }
+
+    /** @returns {VideoProvider | null} See https://github.com/scratchfoundation/scratch-gui/blob/develop/src/lib/video/video-provider.js */
+  }, {
+    key: "_videoProvider",
+    get: function get() {
+      return this.runtime.ioDevices.video.provider || null;
+    }
+
+    /** @return {Omit<HTMLVideoElement, keyof HTMLElement> | null} VideoProvider に紐づいた video エレメント */
+  }, {
+    key: "_video",
+    get: function get() {
+      return this._videoProvider && this._videoProvider.video;
+    }
+
+    /** @returns {MediaStreamTrack[]} 現在使用中のビデオトラック */
+  }, {
+    key: "_tracks",
+    get: function get() {
+      return this._video && this._video.srcObject && this._video.srcObject.getTracks() || [];
+    }
+
+    /** @returns {string | undefined} 現在使用中のビデオデバイスID */
+  }, {
+    key: "_deviceId",
+    get: function get() {
+      return (this._tracks[0] && this._tracks[0].getCapabilities() || {}).deviceId;
+    }
+
+    /** @returns {InputDeviceInfo | undefined} 現在使用中のビデオデバイス */
+  }, {
+    key: "_device",
+    get: function get() {
+      var _this4 = this;
+      return this._videoDevices.find(function (dev) {
+        return dev.deviceId === _this4._deviceId;
+      });
+    }
+
+    /** @returns {string} デフォルトカメラを指すラベル */
+  }, {
+    key: "_DEVICE_LABEL_DEFAULT",
+    get: function get() {
+      return wrapZWSP(formatMessage({
+        id: 'cameraselector.deviceLabelDefault',
+        default: translations.en['cameraselector.deviceLabelDefault']
+      }));
+    }
+
+    /** @returns {string} 前面カメラを指すラベル */
+  }, {
+    key: "_DEVICE_LABEL_USER",
+    get: function get() {
+      return wrapZWSP(formatMessage({
+        id: 'cameraselector.deviceLabelUser',
+        default: translations.en['cameraselector.deviceLabelUser']
+      }));
+    }
+
+    /** @returns {string} 背面カメラを指すラベル */
+  }, {
+    key: "_DEVICE_LABEL_ENVIRONMENT",
+    get: function get() {
+      return wrapZWSP(formatMessage({
+        id: 'cameraselector.deviceLabelEnvironment',
+        default: translations.en['cameraselector.deviceLabelEnvironment']
+      }));
     }
   }], [{
     key: "EXTENSION_NAME",
@@ -1640,5 +1116,101 @@ var ExtensionBlocks = /*#__PURE__*/function () {
   }]);
   return ExtensionBlocks;
 }();
+/**
+ * 取得されたビデオデバイス一覧の label にマッチしないように ZWSP で囲む
+ * @param {string} s
+ * @returns {string}
+ */
+var wrapZWSP = function wrapZWSP(s) {
+  return "\u200B" + s + "\u200B";
+};
+
+/**
+ * 同時実行を抑制した getUserMedia
+ * @param {MediaStreamConstraints} constraints
+ * @returns {Promise<MediaStream>}
+ */
+var getUserMedia = singleExecute(function (constraints) {
+  return navigator.mediaDevices.getUserMedia(constraints);
+}, true);
+
+/**
+ * Takes a function (asynchronous or synchronous) and returns a wrapper function that ensures
+ * the function is not executed concurrently. If the function is called again while it is already
+ * executing, the behavior can be controlled with the queueLastCall option: if true, the
+ * function will be re-executed with the last arguments after the current execution completes;
+ * if false, the last call will be ignored.
+ *
+ * @template T The argument types of the function as a tuple.
+ * @template R The return type of the function.
+ * @param {(...args: T) => R | Promise<R>} func - The function (asynchronous or synchronous) to wrap.
+ * @param {boolean} [queueLastCall=false] - Whether to re-execute the function with the last arguments after the current execution.
+ * @returns {(...args: T) => Promise<R>} A wrapper function that manages execution.
+ */
+function singleExecute(func) {
+  var queueLastCall = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+  var processing = false;
+  var lastArgs = null;
+  var pendingPromise = null;
+  var asyncedFunc = /*#__PURE__*/function () {
+    var _ref2 = _asyncToGenerator( /*#__PURE__*/regenerator.mark(function _callee2() {
+      var _args2 = arguments;
+      return regenerator.wrap(function _callee2$(_context2) {
+        while (1) switch (_context2.prev = _context2.next) {
+          case 0:
+            return _context2.abrupt("return", func.apply(void 0, _args2));
+          case 1:
+          case "end":
+            return _context2.stop();
+        }
+      }, _callee2);
+    }));
+    return function asyncedFunc() {
+      return _ref2.apply(this, arguments);
+    };
+  }();
+  var singleExecutedFunc = /*#__PURE__*/function () {
+    var _ref3 = _asyncToGenerator( /*#__PURE__*/regenerator.mark(function _callee3() {
+      var _len,
+        args,
+        _key,
+        _args3 = arguments;
+      return regenerator.wrap(function _callee3$(_context3) {
+        while (1) switch (_context3.prev = _context3.next) {
+          case 0:
+            for (_len = _args3.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+              args[_key] = _args3[_key];
+            }
+            if (!processing) {
+              _context3.next = 4;
+              break;
+            }
+            if (queueLastCall) {
+              lastArgs = args;
+            }
+            return _context3.abrupt("return", pendingPromise);
+          case 4:
+            processing = true;
+            pendingPromise = asyncedFunc.apply(void 0, args).finally(function () {
+              processing = false;
+              if (queueLastCall && lastArgs !== null) {
+                var nextArgs = lastArgs;
+                lastArgs = null;
+                return singleExecutedFunc.apply(void 0, _toConsumableArray(nextArgs));
+              }
+            });
+            return _context3.abrupt("return", pendingPromise);
+          case 7:
+          case "end":
+            return _context3.stop();
+        }
+      }, _callee3);
+    }));
+    return function singleExecutedFunc() {
+      return _ref3.apply(this, arguments);
+    };
+  }();
+  return singleExecutedFunc;
+}
 
 export { ExtensionBlocks as blockClass, entry };
