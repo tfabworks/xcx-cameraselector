@@ -877,9 +877,7 @@ var ExtensionBlocks = /*#__PURE__*/function () {
       //     defaultValues.push({ text: this._DEVICE_LABEL_RIGHT, value: this._DEVICE_LABEL_RIGHT })
       //   }
       // }
-      var deviceValues = this._videoDevices.filter(function (dev) {
-        return dev.deviceId;
-      }).map(function (dev) {
+      var deviceValues = this._videoDevices.map(function (dev) {
         var value = dev.label.match(/[0-9a-f:\.-]{8}/i) ? dev.label : dev.label + "\u200B [" + dev.deviceId.substring(0, 8) + ']';
         return {
           text: value,
@@ -970,6 +968,8 @@ var ExtensionBlocks = /*#__PURE__*/function () {
       }).then(function (devices) {
         _this2._videoDevices = devices.filter(function (d) {
           return d.kind === 'videoinput';
+        }).filter(function (d) {
+          return d.deviceId;
         });
       }).then(function () {
         // 指定デバイスが見つかったならカメラを切り替える
