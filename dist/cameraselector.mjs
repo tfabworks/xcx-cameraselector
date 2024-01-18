@@ -825,6 +825,7 @@ var ExtensionBlocks = /*#__PURE__*/function () {
           constraints.label = label;
         }
       }
+      console.log("constraints", constraints);
       // デバイスリストを探して見つかる場合その deviceId を条件に使う
       var dev = this._findVideoDevice(constraints);
       if (dev && dev.deviceId) {
