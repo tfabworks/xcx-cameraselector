@@ -85,9 +85,6 @@ class ExtensionBlocks {
      */
     this.runtime = runtime;
 
-    window.runtime = runtime; // DEBUG
-    window.cameraselector = this // DEBUG
-
     if (runtime.formatMessage) {
       // Replace 'formatMessage' to a formatter which is used in the runtime.
       formatMessage = runtime.formatMessage;
@@ -107,6 +104,8 @@ class ExtensionBlocks {
 
     // Video 関連の監視を開始する
     this._registerListeners()
+
+    window.cameraselector = this // DEBUG
   }
 
   /**
@@ -149,11 +148,24 @@ class ExtensionBlocks {
 
   selectCamera(args) {
     const label = args.LIST || args.LABEL || ''
+    /** @type {MediaStreamConstraints & {label?:string}}*/
     const constraints = {}
-    if (label && label !== this._DEVICE_LABEL_DEFAULT) {
-      constraints.label = label
+    if (label) {
+      if (label === this._DEVICE_LABEL_DEFAULT) {
+        /** do nothing */
+      } else if (this._supportedFacingModes.includes("user") && this._STANDARD_DEVICE_LABELS.user.includes(label)) {
+        constraints.facingMode = { ideal: "user" }
+      } else if (this._supportedFacingModes.includes("environment") && this._STANDARD_DEVICE_LABELS.environment.includes(label)) {
+        constraints.facingMode = { ideal: "environment" }
+      } else if (this._supportedFacingModes.includes("left") && this._STANDARD_DEVICE_LABELS.left.includes(label)) {
+        constraints.facingMode = { ideal: "left" }
+      } else if (this._supportedFacingModes.includes("right") && this._STANDARD_DEVICE_LABELS.right.includes(label)) {
+        constraints.facingMode = { ideal: "right" }
+      } else {
+        constraints.label = label
+      }
     }
-    // label を元にデバイスを探す
+    // デバイスリストを探して見つかる場合その deviceId を条件に使う
     const dev = this._findVideoDevice(constraints)
     if (dev && dev.deviceId) {
       constraints.deviceId = dev.deviceId
@@ -161,10 +173,10 @@ class ExtensionBlocks {
     this._desiredVideoTrackConstraints = constraints
     if (this.runtime.ioDevices.video.videoReady) {
       // 既存のビデオストリームを差し替える
-      return this._openVideoStream(this._video)
+      return this._openVideoStream(this._video).then(()=>{})
     } else {
       // 自動的にカメラをONにする
-      return this.runtime.ioDevices.video.enableVideo()
+      return this.runtime.ioDevices.video.enableVideo().then(()=>{})
     }
   }
 
@@ -172,17 +184,28 @@ class ExtensionBlocks {
     const defaultValues = [
       { text: this._DEVICE_LABEL_DEFAULT, value: this._DEVICE_LABEL_DEFAULT }
     ]
-    // Constraints に対応するデバイスが見つからなかった場合に OverconstrainedError が発生する際の問題が未解決なので封印
-    // if(navigator.mediaDevices.getSupportedConstraints().facingMode) {
-    //   defaultValues.push(
-    //     { text: this._DEVICE_LABEL_USER, value: this._DEVICE_LABEL_USER},
-    //     { text: this._DEVICE_LABEL_ENVIRONMENT, value: this._DEVICE_LABEL_ENVIRONMENT}
-    //   )
-    // }
-    const deviceValues = this._videoDevices.map(dev => ({
-      text: dev.label,
-      value: dev.label
-    })).sort((a, b) => b.text < a.text)
+    // Constraints に対応するデバイスが見つからなかった場合に OverconstrainedError が発生する際の問題があるので使えると分かってるときのみ使用する
+    if (navigator.mediaDevices.getSupportedConstraints().facingMode) {
+      if (this._supportedFacingModes.includes("user")) {
+        defaultValues.push({ text: this._DEVICE_LABEL_USER, value: this._DEVICE_LABEL_USER })
+      }
+      if (this._supportedFacingModes.includes("environment")) {
+        defaultValues.push({ text: this._DEVICE_LABEL_ENVIRONMENT, value: this._DEVICE_LABEL_ENVIRONMENT })
+      }
+      if (this._supportedFacingModes.includes("left")) {
+        defaultValues.push({ text: this._DEVICE_LABEL_LEFT, value: this._DEVICE_LABEL_LEFT })
+      }
+      if (this._supportedFacingModes.includes("right")) {
+        defaultValues.push({ text: this._DEVICE_LABEL_RIGHT, value: this._DEVICE_LABEL_RIGHT })
+      }
+    }
+    const deviceValues = this._videoDevices.map(dev => {
+      const value = dev.label.match(/[0-9a-f:\.-]{8}/i) ? dev.label : dev.label + '\u{200b} [' + dev.deviceId.substring(0, 8) + ']'
+      return {
+        text: value,
+        value: value
+      }
+    }).sort((a, b) => b.text < a.text)
     return defaultValues.concat(deviceValues)
   }
 
@@ -197,11 +220,14 @@ class ExtensionBlocks {
     }
     // label指定の場合は完全一致と先頭一致と部分一致をチェックする
     if (typeof videoTrackConstraints.label !== "undefined" && videoTrackConstraints.label !== "") {
+      const [label, suffix] = videoTrackConstraints.label.split('\u{200b} [', 2)
+      const deviceIdPrefix = (suffix || '').replace(/[^0-9a-f].*/i, '')
       const dev =
-        this._videoDevices.find(dev => dev.label === videoTrackConstraints.label) ||
-        this._videoDevices.find(dev => dev.label.startsWith(videoTrackConstraints.label)) ||
-        this._videoDevices.find(dev => dev.label.includes(videoTrackConstraints.label)) ||
-        this._videoDevices.find(dev => dev.label.toLocaleLowerCase().includes(videoTrackConstraints.label.toLocaleLowerCase()))
+        this._videoDevices.find(dev => dev.label === label && deviceIdPrefix && dev.deviceId.startsWith(deviceIdPrefix)) ||
+        this._videoDevices.find(dev => dev.label === label) ||
+        this._videoDevices.find(dev => dev.label.startsWith(label)) ||
+        this._videoDevices.find(dev => dev.label.includes(label)) ||
+        this._videoDevices.find(dev => dev.label.toLocaleLowerCase().includes(label))
       if (dev != null) {
         return dev
       }
@@ -263,7 +289,6 @@ class ExtensionBlocks {
    * @param {HTMLVideoElement | null} newVideo
    */
   _onChangeVideoElement(oldVideo, newVideo) {
-    console.log("_onChangeVideoElement", { oldVideo, newVideo })
     if (oldVideo != null) {
       this._closeVideoStream(oldVideo)
     }
@@ -332,6 +357,9 @@ class ExtensionBlocks {
       })
   }
 
+  /** @returns {string[]} */
+  get _supportedFacingModes() { return Array.from(new Set([].concat(...this._videoDevices.map(dev => dev.getCapabilities().facingMode || [])))) }
+
   /** @returns {VideoProvider | null} See https://github.com/scratchfoundation/scratch-gui/blob/develop/src/lib/video/video-provider.js */
   get _videoProvider() { return this.runtime.ioDevices.video.provider || null }
 
@@ -356,6 +384,18 @@ class ExtensionBlocks {
   /** @returns {string} 背面カメラを指すラベル */
   get _DEVICE_LABEL_ENVIRONMENT() { return wrapZWSP(formatMessage({ id: 'cameraselector.deviceLabelEnvironment', default: translations.en['cameraselector.deviceLabelEnvironment'] })) }
 
+  /** @returns {string} 左カメラを指すラベル */
+  get _DEVICE_LABEL_LEFT() { return wrapZWSP(formatMessage({ id: 'cameraselector.deviceLabelLeft', default: translations.en['cameraselector.deviceLabelLeft'] })) }
+
+  /** @returns {string} 右カメラを指すラベル */
+  get _DEVICE_LABEL_RIGHT() { return wrapZWSP(formatMessage({ id: 'cameraselector.deviceLabelRight', default: translations.en['cameraselector.deviceLabelRight'] })) }
+
+  get _STANDARD_DEVICE_LABELS() {
+    const locales = Object.keys(translations);
+    return ['Default', 'User', 'Environment', 'Left', 'Right']
+      .map(suffix => [suffix, locales.map(locale => translations[locale]['cameraselector.deviceLabel' + suffix]).map(wrapZWSP)])
+      .reduce((o, [k, labels]) => Object.assign(o, {[k.toLowerCase()]: labels}), {})
+  }
 }
 
 /**

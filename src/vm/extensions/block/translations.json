@@ -3,40 +3,50 @@
     "cameraselector.name": "Camera Selector",
     "cameraselector.deviceName": "Device name",
     "cameraselector.selectCamera": "Set camera to [LIST]",
-    "cameraselector.deviceLabelDefault": "Default",
-    "cameraselector.deviceLabelUser": "Front Camera",
-    "cameraselector.deviceLabelEnvironment": "Back Camera"
+    "cameraselector.deviceLabelDefault": "Standard Camera",
+    "cameraselector.deviceLabelUser": "Standard Front Camera",
+    "cameraselector.deviceLabelEnvironment": "Standard Back Camera",
+    "cameraselector.deviceLabelLeft": "Standard Left Camera",
+    "cameraselector.deviceLabelRight": "Standard Right Camera"
   },
   "ja": {
     "cameraselector.name": "カメラセレクター",
     "cameraselector.deviceName": "デバイス名",
     "cameraselector.selectCamera": "カメラを[LIST]に切り替える",
-    "cameraselector.deviceLabelDefault": "Default",
-    "cameraselector.deviceLabelUser": "Front Camera",
-    "cameraselector.deviceLabelEnvironment": "Back Camera"
+    "cameraselector.deviceLabelDefault": "標準カメラ",
+    "cameraselector.deviceLabelUser": "標準前面カメラ",
+    "cameraselector.deviceLabelEnvironment": "標準背面カメラ",
+    "cameraselector.deviceLabelLeft": "標準左カメラ",
+    "cameraselector.deviceLabelRight": "標準右カメラ"
   },
   "ja-Hira": {
     "cameraselector.name": "かめらせれくたー",
     "cameraselector.deviceName": "でばいすめい",
     "cameraselector.selectCamera": "かめらを[LIST]にきりかえる",
-    "cameraselector.deviceLabelDefault": "Default",
-    "cameraselector.deviceLabelUser": "Front Camera",
-    "cameraselector.deviceLabelEnvironment": "Back Camera"
+    "cameraselector.deviceLabelDefault": "ひょうじゅんかめら",
+    "cameraselector.deviceLabelUser": "まえめんかめら",
+    "cameraselector.deviceLabelEnvironment": "はいめんかめら",
+    "cameraselector.deviceLabelLeft": "ひだりかめら",
+    "cameraselector.deviceLabelRight": "みぎかめら"
   },
   "zh-cn": {
     "cameraselector.name": "相机选择器",
     "cameraselector.deviceName": "设备名称",
     "cameraselector.selectCamera": "切换相机至[LIST]",
-    "cameraselector.deviceLabelDefault": "Default",
-    "cameraselector.deviceLabelUser": "Front Camera",
-    "cameraselector.deviceLabelEnvironment": "Back Camera"
+    "cameraselector.deviceLabelDefault": "标准相机",
+    "cameraselector.deviceLabelUser": "标准前置摄像头",
+    "cameraselector.deviceLabelEnvironment": "标准后置摄像头",
+    "cameraselector.deviceLabelLeft": "标准左侧摄像头",
+    "cameraselector.deviceLabelRight": "标准右侧摄像头"
   },
   "zh-tw": {
     "cameraselector.name": "相機選擇器",
     "cameraselector.deviceName": "設備名稱",
     "cameraselector.selectCamera": "切换相机至[LIST]",
-    "cameraselector.deviceLabelDefault": "Default",
-    "cameraselector.deviceLabelUser": "Front Camera",
-    "cameraselector.deviceLabelEnvironment": "Back Camera"
+    "cameraselector.deviceLabelDefault": "標準相機",
+    "cameraselector.deviceLabelUser": "標準前置攝像頭",
+    "cameraselector.deviceLabelEnvironment": "標準後置攝像頭",
+    "cameraselector.deviceLabelLeft": "標準左側攝像頭",
+    "cameraselector.deviceLabelRight": "標準右側攝像頭"
   }
 }
