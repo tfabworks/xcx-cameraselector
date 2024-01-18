@@ -173,10 +173,10 @@ class ExtensionBlocks {
     this._desiredVideoTrackConstraints = constraints
     if (this.runtime.ioDevices.video.videoReady) {
       // 既存のビデオストリームを差し替える
-      return this._openVideoStream(this._video).then(()=>{})
+      return this._openVideoStream(this._video).then(() => { })
     } else {
       // 自動的にカメラをONにする
-      return this.runtime.ioDevices.video.enableVideo().then(()=>{})
+      return this.runtime.ioDevices.video.enableVideo().then(() => { })
     }
   }
 
@@ -184,28 +184,31 @@ class ExtensionBlocks {
     const defaultValues = [
       { text: this._DEVICE_LABEL_DEFAULT, value: this._DEVICE_LABEL_DEFAULT }
     ]
+    // まだテストが不十分なので隠しておく
     // Constraints に対応するデバイスが見つからなかった場合に OverconstrainedError が発生する際の問題があるので使えると分かってるときのみ使用する
-    if (navigator.mediaDevices.getSupportedConstraints().facingMode) {
-      if (this._supportedFacingModes.includes("user")) {
-        defaultValues.push({ text: this._DEVICE_LABEL_USER, value: this._DEVICE_LABEL_USER })
-      }
-      if (this._supportedFacingModes.includes("environment")) {
-        defaultValues.push({ text: this._DEVICE_LABEL_ENVIRONMENT, value: this._DEVICE_LABEL_ENVIRONMENT })
-      }
-      if (this._supportedFacingModes.includes("left")) {
-        defaultValues.push({ text: this._DEVICE_LABEL_LEFT, value: this._DEVICE_LABEL_LEFT })
-      }
-      if (this._supportedFacingModes.includes("right")) {
-        defaultValues.push({ text: this._DEVICE_LABEL_RIGHT, value: this._DEVICE_LABEL_RIGHT })
-      }
-    }
-    const deviceValues = this._videoDevices.map(dev => {
-      const value = dev.label.match(/[0-9a-f:\.-]{8}/i) ? dev.label : dev.label + '\u{200b} [' + dev.deviceId.substring(0, 8) + ']'
-      return {
-        text: value,
-        value: value
-      }
-    }).sort((a, b) => b.text < a.text)
+    // if (navigator.mediaDevices.getSupportedConstraints().facingMode) {
+    //   if (this._supportedFacingModes.includes("user")) {
+    //     defaultValues.push({ text: this._DEVICE_LABEL_USER, value: this._DEVICE_LABEL_USER })
+    //   }
+    //   if (this._supportedFacingModes.includes("environment")) {
+    //     defaultValues.push({ text: this._DEVICE_LABEL_ENVIRONMENT, value: this._DEVICE_LABEL_ENVIRONMENT })
+    //   }
+    //   if (this._supportedFacingModes.includes("left")) {
+    //     defaultValues.push({ text: this._DEVICE_LABEL_LEFT, value: this._DEVICE_LABEL_LEFT })
+    //   }
+    //   if (this._supportedFacingModes.includes("right")) {
+    //     defaultValues.push({ text: this._DEVICE_LABEL_RIGHT, value: this._DEVICE_LABEL_RIGHT })
+    //   }
+    // }
+    const deviceValues = this._videoDevices
+      .filter(dev => dev.deviceId)
+      .map(dev => {
+        const value = dev.label.match(/[0-9a-f:\.-]{8}/i) ? dev.label : dev.label + '\u{200b} [' + dev.deviceId.substring(0, 8) + ']'
+        return {
+          text: value,
+          value: value
+        }
+      }).sort((a, b) => b.text < a.text)
     return defaultValues.concat(deviceValues)
   }
 
@@ -394,7 +397,7 @@ class ExtensionBlocks {
     const locales = Object.keys(translations);
     return ['Default', 'User', 'Environment', 'Left', 'Right']
       .map(suffix => [suffix, locales.map(locale => translations[locale]['cameraselector.deviceLabel' + suffix]).map(wrapZWSP)])
-      .reduce((o, [k, labels]) => Object.assign(o, {[k.toLowerCase()]: labels}), {})
+      .reduce((o, [k, labels]) => Object.assign(o, { [k.toLowerCase()]: labels }), {})
   }
 }
 
