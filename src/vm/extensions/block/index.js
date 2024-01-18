@@ -201,7 +201,6 @@ class ExtensionBlocks {
     //   }
     // }
     const deviceValues = this._videoDevices
-      .filter(dev => dev.deviceId)
       .map(dev => {
         const value = dev.label.match(/[0-9a-f:\.-]{8}/i) ? dev.label : dev.label + '\u{200b} [' + dev.deviceId.substring(0, 8) + ']'
         return {
@@ -261,7 +260,9 @@ class ExtensionBlocks {
     navigator.mediaDevices.enumerateDevices()
       .catch(() => [])
       .then(devices => {
-        this._videoDevices = devices.filter(d => d.kind === 'videoinput')
+        this._videoDevices = devices
+          .filter(d => d.kind === 'videoinput')
+          .filter(d => d.deviceId)
       })
       .then(() => {
         // 指定デバイスが見つかったならカメラを切り替える
