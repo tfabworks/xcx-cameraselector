@@ -896,6 +896,8 @@ var ExtensionBlocks = /*#__PURE__*/function () {
         };
       }).sort(function (a, b) {
         return b.text < a.text;
+      }).filter(function (dev) {
+        return dev.text;
       });
       return defaultValues.concat(deviceValues);
     }
