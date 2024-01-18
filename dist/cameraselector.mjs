@@ -862,34 +862,22 @@ var ExtensionBlocks = /*#__PURE__*/function () {
         value: this._DEVICE_LABEL_DEFAULT
       }];
       // Constraints に対応するデバイスが見つからなかった場合に OverconstrainedError が発生する際の問題があるので使えると分かってるときのみ使用する
-      if (navigator.mediaDevices.getSupportedConstraints().facingMode) {
-        if (this._supportedFacingModes.includes("user")) {
-          defaultValues.push({
-            text: this._DEVICE_LABEL_USER,
-            value: this._DEVICE_LABEL_USER
-          });
-        }
-        if (this._supportedFacingModes.includes("environment")) {
-          defaultValues.push({
-            text: this._DEVICE_LABEL_ENVIRONMENT,
-            value: this._DEVICE_LABEL_ENVIRONMENT
-          });
-        }
-        if (this._supportedFacingModes.includes("left")) {
-          defaultValues.push({
-            text: this._DEVICE_LABEL_LEFT,
-            value: this._DEVICE_LABEL_LEFT
-          });
-        }
-        if (this._supportedFacingModes.includes("right")) {
-          defaultValues.push({
-            text: this._DEVICE_LABEL_RIGHT,
-            value: this._DEVICE_LABEL_RIGHT
-          });
-        }
-      }
+      // if (navigator.mediaDevices.getSupportedConstraints().facingMode) {
+      //   if (this._supportedFacingModes.includes("user")) {
+      //     defaultValues.push({ text: this._DEVICE_LABEL_USER, value: this._DEVICE_LABEL_USER })
+      //   }
+      //   if (this._supportedFacingModes.includes("environment")) {
+      //     defaultValues.push({ text: this._DEVICE_LABEL_ENVIRONMENT, value: this._DEVICE_LABEL_ENVIRONMENT })
+      //   }
+      //   if (this._supportedFacingModes.includes("left")) {
+      //     defaultValues.push({ text: this._DEVICE_LABEL_LEFT, value: this._DEVICE_LABEL_LEFT })
+      //   }
+      //   if (this._supportedFacingModes.includes("right")) {
+      //     defaultValues.push({ text: this._DEVICE_LABEL_RIGHT, value: this._DEVICE_LABEL_RIGHT })
+      //   }
+      // }
       var deviceValues = this._videoDevices.map(function (dev) {
-        var value = dev.label.match(/[0-9a-f:\.-]{8}/i) ? dev.label : dev.label + "\u200B [" + dev.deviceId.substring(0, 8) + ']';
+        var value = dev.label.match(/[0-9a-f:\.-]{8}/i) || !dev.deviceId ? dev.label : dev.label + "\u200B [" + dev.deviceId.substring(0, 8) + ']';
         return {
           text: value,
           value: value
