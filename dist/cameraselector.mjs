@@ -876,16 +876,16 @@ var ExtensionBlocks = /*#__PURE__*/function () {
       //     defaultValues.push({ text: this._DEVICE_LABEL_RIGHT, value: this._DEVICE_LABEL_RIGHT })
       //   }
       // }
-      var deviceValues = this._videoDevices.map(function (dev) {
-        var value = dev.label.match(/[0-9a-f:\.-]{8}/i) || !dev.deviceId ? dev.label : dev.label + "\u200B [" + dev.deviceId.substring(0, 8) + ']';
+      var deviceValues = this._videoDevices.filter(function (dev) {
+        return dev.deviceId;
+      }).map(function (dev) {
+        var value = dev.label.match(/[0-9a-f:\.-]{8}/i) ? dev.label : dev.label + "\u200B [" + dev.deviceId.substring(0, 8) + ']';
         return {
           text: value,
           value: value
         };
       }).sort(function (a, b) {
         return b.text < a.text;
-      }).filter(function (dev) {
-        return dev.text;
       });
       return defaultValues.concat(deviceValues);
     }
