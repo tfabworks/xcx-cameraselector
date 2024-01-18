@@ -63,6 +63,47 @@ var entry = {
   translationMap: translations$1
 };
 
+function _typeof$1(obj) {
+  "@babel/helpers - typeof";
+
+  return _typeof$1 = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) {
+    return typeof obj;
+  } : function (obj) {
+    return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
+  }, _typeof$1(obj);
+}
+
+function _toPrimitive(input, hint) {
+  if (_typeof$1(input) !== "object" || input === null) return input;
+  var prim = input[Symbol.toPrimitive];
+  if (prim !== undefined) {
+    var res = prim.call(input, hint || "default");
+    if (_typeof$1(res) !== "object") return res;
+    throw new TypeError("@@toPrimitive must return a primitive value.");
+  }
+  return (hint === "string" ? String : Number)(input);
+}
+
+function _toPropertyKey(arg) {
+  var key = _toPrimitive(arg, "string");
+  return _typeof$1(key) === "symbol" ? key : String(key);
+}
+
+function _defineProperty(obj, key, value) {
+  key = _toPropertyKey(key);
+  if (key in obj) {
+    Object.defineProperty(obj, key, {
+      value: value,
+      enumerable: true,
+      configurable: true,
+      writable: true
+    });
+  } else {
+    obj[key] = value;
+  }
+  return obj;
+}
+
 function _arrayLikeToArray(arr, len) {
   if (len == null || len > arr.length) len = arr.length;
   for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i];
@@ -169,32 +210,6 @@ function _classCallCheck(instance, Constructor) {
   if (!(instance instanceof Constructor)) {
     throw new TypeError("Cannot call a class as a function");
   }
-}
-
-function _typeof$1(obj) {
-  "@babel/helpers - typeof";
-
-  return _typeof$1 = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) {
-    return typeof obj;
-  } : function (obj) {
-    return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
-  }, _typeof$1(obj);
-}
-
-function _toPrimitive(input, hint) {
-  if (_typeof$1(input) !== "object" || input === null) return input;
-  var prim = input[Symbol.toPrimitive];
-  if (prim !== undefined) {
-    var res = prim.call(input, hint || "default");
-    if (_typeof$1(res) !== "object") return res;
-    throw new TypeError("@@toPrimitive must return a primitive value.");
-  }
-  return (hint === "string" ? String : Number)(input);
-}
-
-function _toPropertyKey(arg) {
-  var key = _toPrimitive(arg, "string");
-  return _typeof$1(key) === "symbol" ? key : String(key);
 }
 
 function _defineProperties(target, props) {
@@ -805,19 +820,19 @@ var ExtensionBlocks = /*#__PURE__*/function () {
       /** @type {MediaStreamConstraints & {label?:string}}*/
       var constraints = {};
       if (label) {
-        if (label === this._DEVICE_LABEL_DEFAULT) ; else if (label === this._DEVICE_LABEL_USER && this._supportedFacingModes.includes("user")) {
+        if (label === this._DEVICE_LABEL_DEFAULT) ; else if (this._supportedFacingModes.includes("user") && this._STANDARD_DEVICE_LABELS.user.includes(label)) {
           constraints.facingMode = {
             ideal: "user"
           };
-        } else if (label === this._DEVICE_LABEL_USER && this._supportedFacingModes.includes("environment")) {
+        } else if (this._supportedFacingModes.includes("environment") && this._STANDARD_DEVICE_LABELS.environment.includes(label)) {
           constraints.facingMode = {
             ideal: "environment"
           };
-        } else if (label === this._DEVICE_LABEL_LEFT && this._supportedFacingModes.includes("left")) {
+        } else if (this._supportedFacingModes.includes("left") && this._STANDARD_DEVICE_LABELS.left.includes(label)) {
           constraints.facingMode = {
             ideal: "left"
           };
-        } else if (label === this._DEVICE_LABEL_RIGHT && this._supportedFacingModes.includes("right")) {
+        } else if (this._supportedFacingModes.includes("right") && this._STANDARD_DEVICE_LABELS.right.includes(label)) {
           constraints.facingMode = {
             ideal: "right"
           };
@@ -825,7 +840,6 @@ var ExtensionBlocks = /*#__PURE__*/function () {
           constraints.label = label;
         }
       }
-      console.log("constraints", constraints);
       // デバイスリストを探して見つかる場合その deviceId を条件に使う
       var dev = this._findVideoDevice(constraints);
       if (dev && dev.deviceId) {
@@ -1001,10 +1015,6 @@ var ExtensionBlocks = /*#__PURE__*/function () {
   }, {
     key: "_onChangeVideoElement",
     value: function _onChangeVideoElement(oldVideo, newVideo) {
-      console.log("_onChangeVideoElement", {
-        oldVideo: oldVideo,
-        newVideo: newVideo
-      });
       if (oldVideo != null) {
         this._closeVideoStream(oldVideo);
       }
@@ -1198,6 +1208,21 @@ var ExtensionBlocks = /*#__PURE__*/function () {
         default: translations.en['cameraselector.deviceLabelRight']
       }));
     }
+  }, {
+    key: "_STANDARD_DEVICE_LABELS",
+    get: function get() {
+      var locales = Object.keys(translations);
+      return ['Default', 'User', 'Environment', 'Left', 'Right'].map(function (suffix) {
+        return [suffix, locales.map(function (locale) {
+          return translations[locale]['cameraselector.deviceLabel' + suffix];
+        }).map(wrapZWSP)];
+      }).reduce(function (o, _ref3) {
+        var _ref4 = _slicedToArray(_ref3, 2),
+          k = _ref4[0],
+          labels = _ref4[1];
+        return Object.assign(o, _defineProperty({}, k.toLowerCase(), labels));
+      }, {});
+    }
   }], [{
     key: "EXTENSION_NAME",
     get:
@@ -1279,7 +1304,7 @@ function singleExecute(func) {
   var lastArgs = null;
   var pendingPromise = null;
   var asyncedFunc = /*#__PURE__*/function () {
-    var _ref3 = _asyncToGenerator( /*#__PURE__*/regenerator.mark(function _callee2() {
+    var _ref5 = _asyncToGenerator( /*#__PURE__*/regenerator.mark(function _callee2() {
       var _args2 = arguments;
       return regenerator.wrap(function _callee2$(_context2) {
         while (1) switch (_context2.prev = _context2.next) {
@@ -1292,11 +1317,11 @@ function singleExecute(func) {
       }, _callee2);
     }));
     return function asyncedFunc() {
-      return _ref3.apply(this, arguments);
+      return _ref5.apply(this, arguments);
     };
   }();
   var singleExecutedFunc = /*#__PURE__*/function () {
-    var _ref4 = _asyncToGenerator( /*#__PURE__*/regenerator.mark(function _callee3() {
+    var _ref6 = _asyncToGenerator( /*#__PURE__*/regenerator.mark(function _callee3() {
       var _len,
         args,
         _key,
@@ -1333,7 +1358,7 @@ function singleExecute(func) {
       }, _callee3);
     }));
     return function singleExecutedFunc() {
-      return _ref4.apply(this, arguments);
+      return _ref6.apply(this, arguments);
     };
   }();
   return singleExecutedFunc;
