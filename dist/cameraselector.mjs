@@ -861,6 +861,7 @@ var ExtensionBlocks = /*#__PURE__*/function () {
         text: this._DEVICE_LABEL_DEFAULT,
         value: this._DEVICE_LABEL_DEFAULT
       }];
+      // まだテストが不十分なので隠しておく
       // Constraints に対応するデバイスが見つからなかった場合に OverconstrainedError が発生する際の問題があるので使えると分かってるときのみ使用する
       // if (navigator.mediaDevices.getSupportedConstraints().facingMode) {
       //   if (this._supportedFacingModes.includes("user")) {
