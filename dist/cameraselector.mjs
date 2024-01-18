@@ -125,6 +125,46 @@ function _asyncToGenerator(fn) {
   };
 }
 
+function _arrayWithHoles(arr) {
+  if (Array.isArray(arr)) return arr;
+}
+
+function _iterableToArrayLimit(arr, i) {
+  var _i = null == arr ? null : "undefined" != typeof Symbol && arr[Symbol.iterator] || arr["@@iterator"];
+  if (null != _i) {
+    var _s,
+      _e,
+      _x,
+      _r,
+      _arr = [],
+      _n = !0,
+      _d = !1;
+    try {
+      if (_x = (_i = _i.call(arr)).next, 0 === i) {
+        if (Object(_i) !== _i) return;
+        _n = !1;
+      } else for (; !(_n = (_s = _x.call(_i)).done) && (_arr.push(_s.value), _arr.length !== i); _n = !0);
+    } catch (err) {
+      _d = !0, _e = err;
+    } finally {
+      try {
+        if (!_n && null != _i["return"] && (_r = _i["return"](), Object(_r) !== _r)) return;
+      } finally {
+        if (_d) throw _e;
+      }
+    }
+    return _arr;
+  }
+}
+
+function _nonIterableRest() {
+  throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
+}
+
+function _slicedToArray(arr, i) {
+  return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest();
+}
+
 function _classCallCheck(instance, Constructor) {
   if (!(instance instanceof Constructor)) {
     throw new TypeError("Cannot call a class as a function");
@@ -603,21 +643,21 @@ var en = {
 	"cameraselector.name": "Camera Selector",
 	"cameraselector.deviceName": "Device name",
 	"cameraselector.selectCamera": "Set camera to [LIST]",
-	"cameraselector.deviceLabelDefault": "Default",
-	"cameraselector.deviceLabelUser": "Front Camera",
-	"cameraselector.deviceLabelEnvironment": "Back Camera",
-	"cameraselector.deviceLabelLeft": "Left Camera",
-	"cameraselector.deviceLabelRight": "Right Camera"
+	"cameraselector.deviceLabelDefault": "Standard Camera",
+	"cameraselector.deviceLabelUser": "Standard Front Camera",
+	"cameraselector.deviceLabelEnvironment": "Standard Back Camera",
+	"cameraselector.deviceLabelLeft": "Standard Left Camera",
+	"cameraselector.deviceLabelRight": "Standard Right Camera"
 };
 var ja = {
 	"cameraselector.name": "カメラセレクター",
 	"cameraselector.deviceName": "デバイス名",
 	"cameraselector.selectCamera": "カメラを[LIST]に切り替える",
-	"cameraselector.deviceLabelDefault": "Default",
-	"cameraselector.deviceLabelUser": "前面カメラ",
-	"cameraselector.deviceLabelEnvironment": "背面カメラ",
-	"cameraselector.deviceLabelLeft": "左カメラ",
-	"cameraselector.deviceLabelRight": "右カメラ"
+	"cameraselector.deviceLabelDefault": "標準カメラ",
+	"cameraselector.deviceLabelUser": "標準前面カメラ",
+	"cameraselector.deviceLabelEnvironment": "標準背面カメラ",
+	"cameraselector.deviceLabelLeft": "標準左カメラ",
+	"cameraselector.deviceLabelRight": "標準右カメラ"
 };
 var translations = {
 	en: en,
@@ -626,7 +666,7 @@ var translations = {
 	"cameraselector.name": "かめらせれくたー",
 	"cameraselector.deviceName": "でばいすめい",
 	"cameraselector.selectCamera": "かめらを[LIST]にきりかえる",
-	"cameraselector.deviceLabelDefault": "Default",
+	"cameraselector.deviceLabelDefault": "ひょうじゅんかめら",
 	"cameraselector.deviceLabelUser": "まえめんかめら",
 	"cameraselector.deviceLabelEnvironment": "はいめんかめら",
 	"cameraselector.deviceLabelLeft": "ひだりかめら",
@@ -636,21 +676,21 @@ var translations = {
 	"cameraselector.name": "相机选择器",
 	"cameraselector.deviceName": "设备名称",
 	"cameraselector.selectCamera": "切换相机至[LIST]",
-	"cameraselector.deviceLabelDefault": "Default",
-	"cameraselector.deviceLabelUser": "前置摄像头",
-	"cameraselector.deviceLabelEnvironment": "后置摄像头",
-	"cameraselector.deviceLabelLeft": "左摄像头",
-	"cameraselector.deviceLabelRight": "右摄像头"
+	"cameraselector.deviceLabelDefault": "标准相机",
+	"cameraselector.deviceLabelUser": "标准前置摄像头",
+	"cameraselector.deviceLabelEnvironment": "标准后置摄像头",
+	"cameraselector.deviceLabelLeft": "标准左侧摄像头",
+	"cameraselector.deviceLabelRight": "标准右侧摄像头"
 },
 	"zh-tw": {
 	"cameraselector.name": "相機選擇器",
 	"cameraselector.deviceName": "設備名稱",
 	"cameraselector.selectCamera": "切换相机至[LIST]",
-	"cameraselector.deviceLabelDefault": "Default",
-	"cameraselector.deviceLabelUser": "前置鏡頭",
-	"cameraselector.deviceLabelEnvironment": "後置鏡頭",
-	"cameraselector.deviceLabelLeft": "左鏡頭",
-	"cameraselector.deviceLabelRight": "右鏡頭"
+	"cameraselector.deviceLabelDefault": "標準相機",
+	"cameraselector.deviceLabelUser": "標準前置攝像頭",
+	"cameraselector.deviceLabelEnvironment": "標準後置攝像頭",
+	"cameraselector.deviceLabelLeft": "標準左側攝像頭",
+	"cameraselector.deviceLabelRight": "標準右側攝像頭"
 }
 };
 
@@ -785,7 +825,7 @@ var ExtensionBlocks = /*#__PURE__*/function () {
           constraints.label = label;
         }
       }
-      // label を元にデバイスを探す
+      // デバイスリストを探して見つかる場合その deviceId を条件に使う
       var dev = this._findVideoDevice(constraints);
       if (dev && dev.deviceId) {
         constraints.deviceId = dev.deviceId;
@@ -793,10 +833,10 @@ var ExtensionBlocks = /*#__PURE__*/function () {
       this._desiredVideoTrackConstraints = constraints;
       if (this.runtime.ioDevices.video.videoReady) {
         // 既存のビデオストリームを差し替える
-        return this._openVideoStream(this._video);
+        return this._openVideoStream(this._video).then(function () {});
       } else {
         // 自動的にカメラをONにする
-        return this.runtime.ioDevices.video.enableVideo();
+        return this.runtime.ioDevices.video.enableVideo().then(function () {});
       }
     }
   }, {
@@ -834,9 +874,10 @@ var ExtensionBlocks = /*#__PURE__*/function () {
         }
       }
       var deviceValues = this._videoDevices.map(function (dev) {
+        var value = dev.label.match(/[0-9a-f:\.-]{8}/i) ? dev.label : dev.label + "\u200B [" + dev.deviceId.substring(0, 8) + ']';
         return {
-          text: dev.label,
-          value: dev.label
+          text: value,
+          value: value
         };
       }).sort(function (a, b) {
         return b.text < a.text;
@@ -859,14 +900,21 @@ var ExtensionBlocks = /*#__PURE__*/function () {
       }
       // label指定の場合は完全一致と先頭一致と部分一致をチェックする
       if (typeof videoTrackConstraints.label !== "undefined" && videoTrackConstraints.label !== "") {
+        var _videoTrackConstraint = videoTrackConstraints.label.split("\u200B [", 2),
+          _videoTrackConstraint2 = _slicedToArray(_videoTrackConstraint, 2),
+          label = _videoTrackConstraint2[0],
+          suffix = _videoTrackConstraint2[1];
+        var deviceIdPrefix = (suffix || '').replace(/[^0-9a-f].*/i, '');
         var dev = this._videoDevices.find(function (dev) {
-          return dev.label === videoTrackConstraints.label;
+          return dev.label === label && deviceIdPrefix && dev.deviceId.startsWith(deviceIdPrefix);
         }) || this._videoDevices.find(function (dev) {
-          return dev.label.startsWith(videoTrackConstraints.label);
+          return dev.label === label;
         }) || this._videoDevices.find(function (dev) {
-          return dev.label.includes(videoTrackConstraints.label);
+          return dev.label.startsWith(label);
         }) || this._videoDevices.find(function (dev) {
-          return dev.label.toLocaleLowerCase().includes(videoTrackConstraints.label.toLocaleLowerCase());
+          return dev.label.includes(label);
+        }) || this._videoDevices.find(function (dev) {
+          return dev.label.toLocaleLowerCase().includes(label);
         });
         if (dev != null) {
           return dev;
