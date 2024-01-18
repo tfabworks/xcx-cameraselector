@@ -811,12 +811,12 @@ var ExtensionBlocks = /*#__PURE__*/function () {
         if (this._supportedFacingModes.includes("user")) {
           defaultValues.push({
             text: this._DEVICE_LABEL_USER,
-            value: this._DEVICE_LABEL_ENVIRONMENT
+            value: this._DEVICE_LABEL_USER
           });
         }
         if (this._supportedFacingModes.includes("environment")) {
           defaultValues.push({
-            text: this._DEVICE_LABEL_USER,
+            text: this._DEVICE_LABEL_ENVIRONMENT,
             value: this._DEVICE_LABEL_ENVIRONMENT
           });
         }
