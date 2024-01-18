@@ -605,15 +605,19 @@ var en = {
 	"cameraselector.selectCamera": "Set camera to [LIST]",
 	"cameraselector.deviceLabelDefault": "Default",
 	"cameraselector.deviceLabelUser": "Front Camera",
-	"cameraselector.deviceLabelEnvironment": "Back Camera"
+	"cameraselector.deviceLabelEnvironment": "Back Camera",
+	"cameraselector.deviceLabelLeft": "Left Camera",
+	"cameraselector.deviceLabelRight": "Right Camera"
 };
 var ja = {
 	"cameraselector.name": "カメラセレクター",
 	"cameraselector.deviceName": "デバイス名",
 	"cameraselector.selectCamera": "カメラを[LIST]に切り替える",
 	"cameraselector.deviceLabelDefault": "Default",
-	"cameraselector.deviceLabelUser": "Front Camera",
-	"cameraselector.deviceLabelEnvironment": "Back Camera"
+	"cameraselector.deviceLabelUser": "前面カメラ",
+	"cameraselector.deviceLabelEnvironment": "背面カメラ",
+	"cameraselector.deviceLabelLeft": "左カメラ",
+	"cameraselector.deviceLabelRight": "右カメラ"
 };
 var translations = {
 	en: en,
@@ -623,24 +627,30 @@ var translations = {
 	"cameraselector.deviceName": "でばいすめい",
 	"cameraselector.selectCamera": "かめらを[LIST]にきりかえる",
 	"cameraselector.deviceLabelDefault": "Default",
-	"cameraselector.deviceLabelUser": "Front Camera",
-	"cameraselector.deviceLabelEnvironment": "Back Camera"
+	"cameraselector.deviceLabelUser": "まえめんかめら",
+	"cameraselector.deviceLabelEnvironment": "はいめんかめら",
+	"cameraselector.deviceLabelLeft": "ひだりかめら",
+	"cameraselector.deviceLabelRight": "みぎかめら"
 },
 	"zh-cn": {
 	"cameraselector.name": "相机选择器",
 	"cameraselector.deviceName": "设备名称",
 	"cameraselector.selectCamera": "切换相机至[LIST]",
 	"cameraselector.deviceLabelDefault": "Default",
-	"cameraselector.deviceLabelUser": "Front Camera",
-	"cameraselector.deviceLabelEnvironment": "Back Camera"
+	"cameraselector.deviceLabelUser": "前置摄像头",
+	"cameraselector.deviceLabelEnvironment": "后置摄像头",
+	"cameraselector.deviceLabelLeft": "左摄像头",
+	"cameraselector.deviceLabelRight": "右摄像头"
 },
 	"zh-tw": {
 	"cameraselector.name": "相機選擇器",
 	"cameraselector.deviceName": "設備名稱",
 	"cameraselector.selectCamera": "切换相机至[LIST]",
 	"cameraselector.deviceLabelDefault": "Default",
-	"cameraselector.deviceLabelUser": "Front Camera",
-	"cameraselector.deviceLabelEnvironment": "Back Camera"
+	"cameraselector.deviceLabelUser": "前置鏡頭",
+	"cameraselector.deviceLabelEnvironment": "後置鏡頭",
+	"cameraselector.deviceLabelLeft": "左鏡頭",
+	"cameraselector.deviceLabelRight": "右鏡頭"
 }
 };
 
@@ -689,9 +699,6 @@ var ExtensionBlocks = /*#__PURE__*/function () {
      * @type {Runtime}
      */
     this.runtime = runtime;
-    window.runtime = runtime; // DEBUG
-    window.cameraselector = this; // DEBUG
-
     if (runtime.formatMessage) {
       // Replace 'formatMessage' to a formatter which is used in the runtime.
       formatMessage = runtime.formatMessage;
@@ -711,6 +718,7 @@ var ExtensionBlocks = /*#__PURE__*/function () {
 
     // Video 関連の監視を開始する
     this._registerListeners();
+    window.cameraselector = this; // DEBUG
   }
 
   /**
@@ -754,9 +762,28 @@ var ExtensionBlocks = /*#__PURE__*/function () {
     key: "selectCamera",
     value: function selectCamera(args) {
       var label = args.LIST || args.LABEL || '';
+      /** @type {MediaStreamConstraints & {label?:string}}*/
       var constraints = {};
-      if (label && label !== this._DEVICE_LABEL_DEFAULT) {
-        constraints.label = label;
+      if (label) {
+        if (label === this._DEVICE_LABEL_DEFAULT) ; else if (label === this._DEVICE_LABEL_USER && this._supportedFacingModes.includes("user")) {
+          constraints.facingMode = {
+            ideal: "user"
+          };
+        } else if (label === this._DEVICE_LABEL_USER && this._supportedFacingModes.includes("environment")) {
+          constraints.facingMode = {
+            ideal: "environment"
+          };
+        } else if (label === this._DEVICE_LABEL_LEFT && this._supportedFacingModes.includes("left")) {
+          constraints.facingMode = {
+            ideal: "left"
+          };
+        } else if (label === this._DEVICE_LABEL_RIGHT && this._supportedFacingModes.includes("right")) {
+          constraints.facingMode = {
+            ideal: "right"
+          };
+        } else {
+          constraints.label = label;
+        }
       }
       // label を元にデバイスを探す
       var dev = this._findVideoDevice(constraints);
@@ -779,13 +806,33 @@ var ExtensionBlocks = /*#__PURE__*/function () {
         text: this._DEVICE_LABEL_DEFAULT,
         value: this._DEVICE_LABEL_DEFAULT
       }];
-      // Constraints に対応するデバイスが見つからなかった場合に OverconstrainedError が発生する際の問題が未解決なので封印
-      // if(navigator.mediaDevices.getSupportedConstraints().facingMode) {
-      //   defaultValues.push(
-      //     { text: this._DEVICE_LABEL_USER, value: this._DEVICE_LABEL_USER},
-      //     { text: this._DEVICE_LABEL_ENVIRONMENT, value: this._DEVICE_LABEL_ENVIRONMENT}
-      //   )
-      // }
+      // Constraints に対応するデバイスが見つからなかった場合に OverconstrainedError が発生する際の問題があるので使えると分かってるときのみ使用する
+      if (navigator.mediaDevices.getSupportedConstraints().facingMode) {
+        if (this._supportedFacingModes.includes("user")) {
+          defaultValues.push({
+            text: this._DEVICE_LABEL_USER,
+            value: this._DEVICE_LABEL_ENVIRONMENT
+          });
+        }
+        if (this._supportedFacingModes.includes("environment")) {
+          defaultValues.push({
+            text: this._DEVICE_LABEL_USER,
+            value: this._DEVICE_LABEL_ENVIRONMENT
+          });
+        }
+        if (this._supportedFacingModes.includes("left")) {
+          defaultValues.push({
+            text: this._DEVICE_LABEL_LEFT,
+            value: this._DEVICE_LABEL_LEFT
+          });
+        }
+        if (this._supportedFacingModes.includes("right")) {
+          defaultValues.push({
+            text: this._DEVICE_LABEL_RIGHT,
+            value: this._DEVICE_LABEL_RIGHT
+          });
+        }
+      }
       var deviceValues = this._videoDevices.map(function (dev) {
         return {
           text: dev.label,
@@ -1005,6 +1052,16 @@ var ExtensionBlocks = /*#__PURE__*/function () {
       }());
     }
 
+    /** @returns {string[]} */
+  }, {
+    key: "_supportedFacingModes",
+    get: function get() {
+      var _ref2;
+      return Array.from(new Set((_ref2 = []).concat.apply(_ref2, _toConsumableArray(this._videoDevices.map(function (dev) {
+        return dev.getCapabilities().facingMode || [];
+      })))));
+    }
+
     /** @returns {VideoProvider | null} See https://github.com/scratchfoundation/scratch-gui/blob/develop/src/lib/video/video-provider.js */
   }, {
     key: "_videoProvider",
@@ -1070,6 +1127,26 @@ var ExtensionBlocks = /*#__PURE__*/function () {
       return wrapZWSP(formatMessage({
         id: 'cameraselector.deviceLabelEnvironment',
         default: translations.en['cameraselector.deviceLabelEnvironment']
+      }));
+    }
+
+    /** @returns {string} 左カメラを指すラベル */
+  }, {
+    key: "_DEVICE_LABEL_LEFT",
+    get: function get() {
+      return wrapZWSP(formatMessage({
+        id: 'cameraselector.deviceLabelLeft',
+        default: translations.en['cameraselector.deviceLabelLeft']
+      }));
+    }
+
+    /** @returns {string} 右カメラを指すラベル */
+  }, {
+    key: "_DEVICE_LABEL_RIGHT",
+    get: function get() {
+      return wrapZWSP(formatMessage({
+        id: 'cameraselector.deviceLabelRight',
+        default: translations.en['cameraselector.deviceLabelRight']
       }));
     }
   }], [{
@@ -1153,7 +1230,7 @@ function singleExecute(func) {
   var lastArgs = null;
   var pendingPromise = null;
   var asyncedFunc = /*#__PURE__*/function () {
-    var _ref2 = _asyncToGenerator( /*#__PURE__*/regenerator.mark(function _callee2() {
+    var _ref3 = _asyncToGenerator( /*#__PURE__*/regenerator.mark(function _callee2() {
       var _args2 = arguments;
       return regenerator.wrap(function _callee2$(_context2) {
         while (1) switch (_context2.prev = _context2.next) {
@@ -1166,11 +1243,11 @@ function singleExecute(func) {
       }, _callee2);
     }));
     return function asyncedFunc() {
-      return _ref2.apply(this, arguments);
+      return _ref3.apply(this, arguments);
     };
   }();
   var singleExecutedFunc = /*#__PURE__*/function () {
-    var _ref3 = _asyncToGenerator( /*#__PURE__*/regenerator.mark(function _callee3() {
+    var _ref4 = _asyncToGenerator( /*#__PURE__*/regenerator.mark(function _callee3() {
       var _len,
         args,
         _key,
@@ -1207,7 +1284,7 @@ function singleExecute(func) {
       }, _callee3);
     }));
     return function singleExecutedFunc() {
-      return _ref3.apply(this, arguments);
+      return _ref4.apply(this, arguments);
     };
   }();
   return singleExecutedFunc;
