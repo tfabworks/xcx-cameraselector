@@ -1,6 +1,6 @@
 {
   "name": "xcx-cameraselector",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "scripts": {
     "register": "npx -y xcratch-register --id=cameraselector --gui=../scratch-gui --block=./src/vm/extensions/block --entry=./src/gui/lib/libraries/extensions/entry --core --link --use=extension-support util",
     "build": "npx -y xcratch-build --module=cameraselector --gui=../scratch-gui --block=./src/vm/extensions/block --entry=./src/gui/lib/libraries/extensions/entry",
