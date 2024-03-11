@@ -16,7 +16,7 @@ let formatMessage = messageData => messageData.defaultMessage;
  * Setup format-message for this extension.
  */
 const setupTranslations = () => {
-  const localeSetup = formatMessage.setup();
+  const localeSetup = formatMessage.setup ? formatMessage.setup() : null;
   if (localeSetup && localeSetup.translations[localeSetup.locale]) {
     Object.assign(
       localeSetup.translations[localeSetup.locale],
@@ -38,6 +38,15 @@ let extensionURL = 'https://tfabworks.github.io/xcx-cameraselector/dist/camerase
  * Scratch 3.0 blocks for example of Xcratch.
  */
 class ExtensionBlocks {
+
+	/**
+   * A translation object which is used in this class.
+   * @param {FormatObject} formatter - translation object
+   */
+  static set formatMessage (formatter) {
+    formatMessage = formatter;
+    if (formatMessage) setupTranslations();
+  }
 
   /**
    * @return {string} - the name of this extension.

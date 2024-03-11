@@ -725,7 +725,7 @@ var formatMessage = function formatMessage(messageData) {
  * Setup format-message for this extension.
  */
 var setupTranslations = function setupTranslations() {
-  var localeSetup = formatMessage.setup();
+  var localeSetup = formatMessage.setup ? formatMessage.setup() : null;
   if (localeSetup && localeSetup.translations[localeSetup.locale]) {
     Object.assign(localeSetup.translations[localeSetup.locale], translations[localeSetup.locale]);
   }
@@ -1215,12 +1215,23 @@ var ExtensionBlocks = /*#__PURE__*/function () {
       }, {});
     }
   }], [{
-    key: "EXTENSION_NAME",
-    get:
+    key: "formatMessage",
+    set:
+    /**
+      * A translation object which is used in this class.
+      * @param {FormatObject} formatter - translation object
+      */
+    function set(formatter) {
+      formatMessage = formatter;
+      if (formatMessage) setupTranslations();
+    }
+
     /**
      * @return {string} - the name of this extension.
      */
-    function get() {
+  }, {
+    key: "EXTENSION_NAME",
+    get: function get() {
       return formatMessage({
         id: 'cameraselector.name',
         default: translations.en['cameraselector.name'],
