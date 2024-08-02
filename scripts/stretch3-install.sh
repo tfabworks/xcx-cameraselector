@@ -28,6 +28,6 @@ if ! grep -q "import ${EXTENSION_ID}Entry from" src/lib/libraries/extensions/ind
     cp ${EXTENSION_REPO}/src/gui/lib/libraries/extensions/entry/inset-icon.* src/lib/libraries/extensions/${EXTENSION_ID}/
     cp ${EXTENSION_REPO}/src/gui/lib/libraries/extensions/entry/translations.json src/lib/libraries/extensions/${EXTENSION_ID}/
     cp ${EXTENSION_REPO}/src/gui/lib/libraries/extensions/entry/index-base.jsx src/lib/libraries/extensions/${EXTENSION_ID}/
-    cp ${EXTENSION_REPO}/src/gui/lib/libraries/extensions/entry/index-streach3.jsx src/lib/libraries/extensions/${EXTENSION_ID}/
-    sed -e "s|^export default \[$|import ${EXTENSION_ID}Entry from './${EXTENSION_ID}/index-streach3.jsx';${LF}${LF}export default [${LF}    ${EXTENSION_ID}Entry,|g" src/lib/libraries/extensions/index.jsx_orig > src/lib/libraries/extensions/index.jsx
+    cp ${EXTENSION_REPO}/src/gui/lib/libraries/extensions/entry/index-stretch3.jsx src/lib/libraries/extensions/${EXTENSION_ID}/
+    sed -e "s|^export default \[$|import ${EXTENSION_ID}Entry from './${EXTENSION_ID}/index-stretch3.jsx';${LF}${LF}export default [${LF}    ${EXTENSION_ID}Entry,|g" src/lib/libraries/extensions/index.jsx_orig > src/lib/libraries/extensions/index.jsx
 fi
