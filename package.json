@@ -2,13 +2,16 @@
   "name": "xcx-cameraselector",
   "version": "1.0.0",
   "scripts": {
-    "register": "npx -y xcratch-register --id=cameraselector --gui=../scratch-gui --block=./src/vm/extensions/block --entry=./src/gui/lib/libraries/extensions/entry --core --link --use=extension-support util",
-    "build": "npx -y xcratch-build --module=cameraselector --gui=../scratch-gui --block=./src/vm/extensions/block --entry=./src/gui/lib/libraries/extensions/entry",
-    "start": "cd ../scratch-gui && npm run start",
-    "preregister": "npm run setup-prerequisites",
-    "prebuild": "npm run register",
-    "prestart": "npm run register",
-    "setup-prerequisites": "test -d ../scratch-gui || git clone --depth 1 https://github.com/xcratch/scratch-gui.git ../scratch-gui; test -d ../scratch-vm || git clone --depth 1 https://github.com/xcratch/scratch-vm.git ../scratch-vm; test -d ../scratch-gui/node_modules/scratch-vm || ( (cd ../scratch-vm && npm install && npm link); (cd ../scratch-gui && npm install && npm link scratch-vm); ); test -d ../scratch-vm/node_modules/get-user-media-promise || (cd ../scratch-vm && npm install -D get-user-media-promise)"
+		"build": "NODE_NO_WARNINGS=1 npx -y xcratch-build --module=cameraselector --gui=${XCRATCH_PATH:-../scratch-gui.xcratch} --block=./src/vm/extensions/block --entry=./src/gui/lib/libraries/extensions/entry",
+		"start": "cd ${XCRATCH_PATH:-../scratch-gui.xcratch} && npm run start",
+		"start-stretch3": "bash ./scripts/stretch3-start.sh",
+		"prebuild": "npm run register",
+		"prestart": "npm run register",
+		"register": "find src/vm -maxdepth 1 -type l -delete; npx -y xcratch-register --id=cameraselector --gui=${XCRATCH_PATH:-../scratch-gui.xcratch} --block=./src/vm/extensions/block --entry=./src/gui/lib/libraries/extensions/entry --core --link --use=extension-support util",
+    "preregister": "npm run setup-prerequisites1; npm run setup-prerequisites2; npm run setup-prerequisites3",
+    "setup-prerequisites1": "set -x; test -d ${XCRATCH_PATH:-../scratch-gui.xcratch} || (git clone --depth 1 https://github.com/xcratch/scratch-gui.git ${XCRATCH_PATH:-../scratch-gui.xcratch}; cd ${XCRATCH_PATH:-../scratch-gui.xcratch} && npm install)",
+    "setup-prerequisites2": "set -x; test -d ${XCRATCH_PATH:-../scratch-gui.xcratch}/node_modules/scratch-vm || (cd ${XCRATCH_PATH:-../scratch-gui.xcratch} && npm install scratch-vm)",
+    "setup-prerequisites3": "set -x; test -d ${XCRATCH_PATH:-../scratch-gui.xcratch}/node_modules/get-user-media-promise || (cd ${XCRATCH_PATH:-../scratch-gui.xcratch} && npm install -D get-user-media-promise)"
   },
   "devDependencies": {
     "get-user-media-promise": "^1.1.4",

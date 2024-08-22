@@ -5,10 +5,10 @@
   },
   "ja": {
     "cameraselector.entry.name": "カメラセレクター",
-    "cameraselector.entry.description": "使用するカメラを切り替えられるようにします。"
+    "cameraselector.entry.description": "使うカメラを選ぶ。"
   },
   "ja-Hira": {
     "cameraselector.entry.name": "かめらせれくたー",
-    "cameraselector.entry.description": "つかうかめらをえらべるようにします。"
+    "cameraselector.entry.description": "つかうかめらをえらぶ。"
   }
 }
